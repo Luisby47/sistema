@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class CrnubeSpreadsheetRole extends Model
 {
     use HasFactory;
+
+    protected $table = 'crnube_spreadsheet_roles';
     final public const DEFAULT_ROLE_ID = 1;
 
 

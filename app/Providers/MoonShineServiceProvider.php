@@ -6,6 +6,10 @@ namespace App\Providers;
 
 use App\Models\CrnubeSpreadsheetRole;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
+use App\MoonShine\Resources\HrDepartmentResource;
+use App\MoonShine\Resources\HrEmployeeResource;
+use App\MoonShine\Resources\HrJobResource;
+use App\MoonShine\Resources\ResCompanyResource;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
 use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
@@ -50,11 +54,21 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 ),
             ]),
             MenuGroup::make('Mantenimientos', [
-                MenuItem::make(
-                    'Usuarios',
-                    new MoonShineUserResource()
+                MenuItem::make('Empleados',
+                    new HrEmployeeResource()
                 ),
-            ]),
+                MenuItem::make('Departamentos',
+                    new HrDepartmentResource()
+                ),
+                MenuItem::make('Puestos',
+                    new HrJobResource()
+                ),
+                MenuItem::make('Compañias',
+                    new ResCompanyResource()
+                ),
+
+            ],'heroicons.outline.user-group')->canSee(static function () {
+                    return auth('moonshine')->user()->role_id === 1;}),
 
             MenuGroup::make('Procesar Planilla', [
                 MenuItem::make(
@@ -73,7 +87,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 
             MenuGroup::make('Gestionar Usuarios y Roles', [
                     MenuItem::make(
-                        'Crnube Users',
+                        'Usuarios',
                         new CrnubeSpreadsheetUserResource(),
 
                     // ... otros recursos
