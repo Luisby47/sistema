@@ -56,7 +56,7 @@ class ProfilePage extends Page
                                 ->{config('moonshine.auth.fields.name', 'name')})
                             ->required(),
 
-                        Image::make(trans('moonshine::ui.resource.avatar'), 'avatar')
+                        Image::make('Foto de Perfil', 'avatar')
                             ->setValue(auth()->user()
                                 ->{config('moonshine.auth.fields.avatar', 'avatar')} ?? null)
                             ->disk(config('moonshine.disk', 'public'))

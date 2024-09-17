@@ -85,7 +85,7 @@ return [
             'username' => 'email',
             'password' => 'password',
             'name' => 'name',
-            'photo' => 'photo',
+            'avatar' => 'avatar',
         ],
         'guard' => 'moonshine',
         'guards' => [

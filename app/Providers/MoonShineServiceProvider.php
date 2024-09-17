@@ -118,7 +118,13 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     {
         session()->put('locale', 'es');
         app()->setLocale(session()->get('locale'));
+
         parent::boot();
+
+        moonShineAssets()->add([
+            '/css/app.css',
+
+        ]);
 
         moonshineColors()
             ->background('#09304d')

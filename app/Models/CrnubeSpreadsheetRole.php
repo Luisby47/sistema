@@ -14,6 +14,7 @@ class CrnubeSpreadsheetRole extends Model
 
     protected $table = 'crnube_spreadsheet_roles';
     final public const DEFAULT_ROLE_ID = 1;
+    public $incrementing = true;
 
 
     protected $fillable = ['name'];

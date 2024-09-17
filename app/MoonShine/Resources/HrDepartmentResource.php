@@ -72,8 +72,12 @@ class HrDepartmentResource extends ModelResource
             Block::make([
                 ID::make()->sortable(),
                 Text::make('Nombre', 'name'),
+
+
                 // Relación con la compañia a la que pertenece el departamento
                 BelongsTo::make('Compañia', 'company', static fn (ResCompany $model) => $model->name, new ResCompanyResource()),
+
+
                 Date::make('Fecha de creación', 'create_date')
                     ->format('d/m/Y')
                     ->default(now()->toDateTimeString())

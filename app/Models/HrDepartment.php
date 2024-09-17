@@ -25,6 +25,14 @@ class HrDepartment extends Model
 
     protected $fillable = ['name'];
 
+
+
+
+
+
+
+
+
     // Un departamento pertenece a una compañia
     public function company() : BelongsTo
     {

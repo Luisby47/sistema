@@ -114,9 +114,9 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                         Text::make(__('moonshine::ui.resource.name'), 'name')
                             ->required(),
 
-                        Image::make('Foto', 'Photo')
+                        Image::make('Foto', 'avatar')
                             ->showOnExport()
-                            ->disk(config('moonshine.disk', 'public'))
+                            ->disk(config('moonshine.disk', 'avatar'))
                             ->dir('moonshine_users')
                             ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif']),
 
@@ -170,10 +170,21 @@ class CrnubeSpreadsheetUserResource extends ModelResource
             ],
 
             // Si la contraseña ya existe, no es necesario que se ingrese una nueva y debe tener al menos 6 caracteres y ser igual a la contraseña repetida
+            /*
             'password' => $item->exists
                 ? 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat'
                 : 'required|min:6|required_with:password_repeat|same:password_repeat',
             'name' => 'required',
+            */
+            'password' => [
+                $item->exists ? 'sometimes' : 'required',
+                'nullable',
+                'min:12',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{12,}$/',
+                'required_with:password_repeat',
+                'same:password_repeat',
+            ],
+
         ];
     }
 }

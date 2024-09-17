@@ -27,7 +27,7 @@ class CrnubeSpreadsheetUser extends Authenticatable
     public $incrementing = false; // Para que no sea autoincremental ya que el sera el id de la tabla res_users
 
     protected $fillable = [
-        'id', 'role_id', 'email', 'password', 'name', 'photo',
+        'id', 'role_id', 'email', 'password', 'name', 'avatar',
     ];
 
     protected $hidden = [
