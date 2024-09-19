@@ -7,6 +7,8 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreedsheatConceptos;
 
+use MoonShine\ChangeLog\Components\ChangeLog;
+use MoonShine\Enums\Layer;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
@@ -32,6 +34,16 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 
     protected bool $import = True;
 
+
+    protected function onBoot(): void
+    {
+        $this->getPages()
+            ->formPage()
+            ->pushToLayer(
+                Layer::BOTTOM,
+                ChangeLog::make('Changelog', $this)
+            );
+    }
     /**
      * @return list<MoonShineComponent|Field>
      */

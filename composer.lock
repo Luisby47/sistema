@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "239d7aac7cc144e0c733c7dc1d69cb7c",
+    "content-hash": "a3769f993312a97d602032a5b9be0f19",
     "packages": [
         {
             "name": "brick/math",
@@ -1963,6 +1963,71 @@
                 }
             ],
             "time": "2024-06-28T09:40:51+00:00"
+        },
+        {
+            "name": "moonshine/changelog",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moonshine-software/changelog.git",
+                "reference": "fbf18a614a6e7cf2dce08d1517fe1be99393032e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moonshine-software/changelog/zipball/fbf18a614a6e7cf2dce08d1517fe1be99393032e",
+                "reference": "fbf18a614a6e7cf2dce08d1517fe1be99393032e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": "^8.1|^8.2"
+            },
+            "conflict": {
+                "moonshine/moonshine": "<2.0"
+            },
+            "require-dev": {
+                "brianium/paratest": "^6.8",
+                "mockery/mockery": "^1.4.4",
+                "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0|^8.0",
+                "phpstan/phpstan": "^1.4.7",
+                "phpunit/phpunit": "^9.5.8"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "MoonShine\\ChangeLog\\ChangeLogServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "MoonShine\\ChangeLog\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Danil Shutsky",
+                    "email": "thecutcode@gmail.com",
+                    "homepage": "https://moonshine-laravel.com"
+                }
+            ],
+            "description": "Model ChangeLog for MoonShine",
+            "homepage": "https://moonshine-laravel.com",
+            "keywords": [
+                "changelog",
+                "moonshine"
+            ],
+            "support": {
+                "issues": "https://github.com/moonshine-software/changelog/issues",
+                "source": "https://github.com/moonshine-software/changelog"
+            },
+            "time": "2024-05-02T13:11:46+00:00"
         },
         {
             "name": "moonshine/moonshine",
@@ -8984,5 +9049,5 @@
         "php": "^8.2"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
