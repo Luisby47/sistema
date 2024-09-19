@@ -13,17 +13,16 @@ return new class extends Migration
     {
         Schema::create('crnube_spreadsheet_conceptos', function (Blueprint $table) {
             $table->id();
-            $table->foreign('id_empleado')->references('id')
-                ->on('hr_employee')->onDelete('cascade');
             $table->string('tipo_concepto',3);
             $table->string('tipo_valor',4);
             $table->string('motivo');
-            $table->bigInteger('valor');
+            $table->decimal('valor',13,2);
             $table->text('observaciones');
-            $table->check("tipo_concepto in ('ING','DED')");
-            $table->check("tipo_valor in ('MONT','PORC')");
             $table->timestamps();
         });
+
+        DB::statement("ALTER TABLE crnube_spreadsheet_conceptos ADD CONSTRAINT chk_tipo_concepto CHECK (tipo_concepto IN ('ING', 'DED'))");
+        DB::statement("ALTER TABLE crnube_spreadsheet_conceptos ADD CONSTRAINT chk_tipo_valor CHECK (tipo_valor IN ('MONT', 'PORC'))");
     }
 
     /**
@@ -31,6 +30,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::statement("ALTER TABLE crnube_spreadsheet_conceptos DROP CONSTRAINT chk_tipo_concepto");
+        DB::statement("ALTER TABLE crnube_spreadsheet_conceptos DROP CONSTRAINT chk_tipo_valor");
         Schema::dropIfExists('crnube_spreadsheet_conceptos');
     }
 };
