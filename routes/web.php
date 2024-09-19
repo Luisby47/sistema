@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\CrnubeAuthController;
+use App\Http\Controllers\Company\CompanyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,3 +20,5 @@ if (config('moonshine.auth.enable', true)) {
             Route::get('/logout', 'logout')->name('logout');
         });
 }
+
+Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('change-company');

@@ -7,6 +7,7 @@ namespace App\MoonShine;
 use App\Models\ResCompany;
 use App\MoonShine\Resources\ResCompanyResource;
 use MoonShine\Components\Layout\{Content,
+    Div,
     Flash,
     Footer,
     Header,
@@ -17,7 +18,9 @@ use MoonShine\Components\Layout\{Content,
     Search,
     TopBar};
 
+use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Components\Dropdown;
+use MoonShine\Components\Link;
 use MoonShine\Components\When;
 use MoonShine\Contracts\MoonShineLayoutContract;
 use MoonShine\Fields\Relationships\BelongsTo;
@@ -30,9 +33,22 @@ final class MoonShineLayout implements MoonShineLayoutContract
     {
 
 
+        $companies = ResCompany::all()->pluck('name', 'id')->toArray();
         return LayoutBuilder::make([
             TopBar::make([
                 Menu::make()->top(),
+                /*
+                Dropdown::make(
+                    toggler: 'Click me',
+                )
+                    ->items([
+                        Link::make('#', 'Link 1'),
+                        Link::make('#', 'Link 2'),
+                        Link::make('#', 'Link 3'),
+                    ])
+                    ->searchable()
+                    ->searchPlaceholder('Search item')
+                */
 
 
 
@@ -40,20 +56,41 @@ final class MoonShineLayout implements MoonShineLayoutContract
                 ->actions([
                     When::make(
                         static fn() => config('moonshine.auth.enable', true),
-                        static fn() => [Profile::make()],
-                        static fn() =>[ ]
+                        static fn() => [
+
+                            //Este select se puede usar para cambiar de compania en el sistema de planillas los cuales estan en la tabla res_company, estonces el usuario debe selecionar una opcion y se guardar esa opcion en la session del usuario  y se debe mostrar en el topbar
+
+
+                            Div::make([
+                                Select::make('Empresas', 'company')
+                                    ->options($companies)
+                                    ->default(session('company', key($companies)))
+                                    ->native()
+                                    ->customAttributes(['style' => 'margin: 0 !important; '])
+                                    //->onChange(static fn($value) => session(['company' => $value]))
+
+                            ])->customAttributes(['style' =>  'display: flex !important; justify-content: center !important; align-items: center !important; height: 100% !important; ']),
+
+                            /*
+                              Div::make([Dropdown::make(
+                                toggler: 'Cambiar Compania',
+                            )
+                                ->items([
+                                    Link::make('#', 'Link 1'),
+                                    Link::make('#', 'Link 2'),
+                                    Link::make('#', 'Link 3'),
+                                ])
+                                ->searchable()
+                                ->searchPlaceholder('Search item')])->customAttributes(["style = 'background: red !important ;'"]),
+                            */
+                             Profile::make() ],
 
                     )
                 ]),
             LayoutBlock::make([
                 Flash::make(),
-                Select::make('Empresas', 'company')
-                    ->options([
-                        'company' => 'Company',
-                        'company' =>  'Company',
-                    ])
-                    ->default('Company')
-                    ->customAttributes(['style' => 'background: red !important ;']),
+
+
 
 
 

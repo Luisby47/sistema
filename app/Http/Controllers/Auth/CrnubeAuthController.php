@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Form\LoginForm;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

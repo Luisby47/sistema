@@ -37,7 +37,8 @@ class HrDepartmentResource extends ModelResource
     protected array $with = ['company']; // Definir las relaciones que se van a cargar con el modelo
 
     protected bool $detailInModal = true;
-
+    // protected string $sortColumn = ''; // Default sort field
+    protected string $sortDirection = 'ASC';
 
     public function getActiveActions(): array
     {
@@ -56,11 +57,6 @@ class HrDepartmentResource extends ModelResource
     }
 
 
-    public function query(): \Illuminate\Contracts\Database\Eloquent\Builder
-    {
-
-        return parent::query()->orderBy('id', 'asc');
-    }
 
 
     /**
