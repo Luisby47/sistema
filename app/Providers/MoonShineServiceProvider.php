@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\CrnubeSpreadsheetRole;
+use App\Models\CrnubeSpreedsheatConceptos;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
+use App\MoonShine\Resources\CrnubeSpreedsheatConceptosResource;
 use App\MoonShine\Resources\HrDepartmentResource;
 use App\MoonShine\Resources\HrEmployeeResource;
 use App\MoonShine\Resources\HrJobResource;
@@ -66,7 +68,9 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Compañias',
                     new ResCompanyResource()
                 ),
-
+                MenuItem::make('Conceptos',
+                new CrnubeSpreedsheatConceptosResource()
+                ),
             ],'heroicons.outline.user-group')->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1;}),
 
