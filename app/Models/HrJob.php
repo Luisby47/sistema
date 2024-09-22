@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use MoonShine\Traits\Models\HasMoonShineSocialite;
 /**
@@ -33,5 +34,12 @@ class HrJob extends Model
     public function department() : BelongsTo
     {
         return $this->belongsTo(HrDepartment::class, 'company_id', 'id');
+    }
+
+
+    // Un Puesto tiene muchos empleados
+    public function employees(): HasMany
+    {
+        return $this->hasMany(HrEmployee::class, 'job_id', 'id');
     }
 }

@@ -5,9 +5,15 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 
+use App\Models\CrnubeSpreadsheetRole;
+use App\Models\HrDepartment;
+use App\Models\ResCompany;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\HrJob;
 
+use MoonShine\Fields\Date;
+use MoonShine\Fields\Relationships\BelongsTo;
+use MoonShine\Fields\Textarea;
 use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
@@ -56,6 +62,24 @@ class HrJobResource extends ModelResource
             Block::make([
                 ID::make()->sortable(),
                 Text::make('Nombre', 'name'),
+                Date::make('Fecha de creación', 'create_date')
+                    ->format('d/m/Y')
+                    ->default(now()->toDateTimeString())
+                    ->sortable(),
+
+                BelongsTo::make('Compañia', 'company',
+                    static fn (ResCompany $model) => $model->name, new ResCompanyResource()
+                )->badge('green'),
+
+                BelongsTo::make('Departamento', 'department',
+                    static fn (HrDepartment $model) => $model->name, new HrDepartmentResource()
+                )->badge('green'),
+
+                Text::make('Estado', 'state'),
+                Textarea::make('Descripción', 'description')
+                    ->default('Sin descripción')
+                    ->readonly(),
+
             ]),
         ];
     }

@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\Models\HrDepartment;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ResCompany;
 
+use MoonShine\Fields\Date;
+use MoonShine\Fields\Email;
+use MoonShine\Fields\Number;
+use MoonShine\Fields\Phone;
+use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
+use MoonShine\Fields\Textarea;
 use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
@@ -54,7 +61,23 @@ class ResCompanyResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable(),
+                Text::make('Cedula', 'company_registry'),
                 Text::make('Nombre', 'name'),
+                Date::make('Fecha de creación', 'create_date')
+                    ->format('d/m/Y')
+                    ->default(now()->toDateTimeString())
+                    ->sortable(),
+                //logo_web byte logo de la compañia
+                Email::make('Correo', 'email'),
+                Phone::make('Teléfono', 'phone'),
+                Number::make('Numero de Cuenta', 'account_no'),
+                // Referencia al identificador del diario de cambio de moneda en la tabla
+                //account_journal.id
+
+                //BelongsTo::make('Diario de Cambio de Moneda', 'currency_exchange_journal', static fn (ResCompany $model) => $model->name, new ResCompanyResource()),
+                //Number::make( 'Cambio de Moneda', 'currency_exchange_journal_id'),
+
+
             ]),
         ];
     }

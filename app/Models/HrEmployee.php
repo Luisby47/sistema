@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use MoonShine\Traits\Models\HasMoonShineSocialite;
 /**
@@ -21,4 +22,17 @@ class HrEmployee extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = ['name_related'];
+
+
+    // Un empleado pertenece a una compañia
+    public function department() : BelongsTo
+    {
+        return $this->belongsTo(HrDepartment::class  );
+    }
+
+    // Un empleado pertenece a una puesto
+    public function job() : BelongsTo
+    {
+        return $this->belongsTo(HrJob::class , 'job_id' ,'id'  );
+    }
 }

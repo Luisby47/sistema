@@ -42,7 +42,7 @@ class HrDepartmentResource extends ModelResource
 
     public function getActiveActions(): array
     {
-        return ['view'];
+        return ['view' ];
     }
 
 
@@ -78,7 +78,7 @@ class HrDepartmentResource extends ModelResource
                     ->format('d/m/Y')
                     ->default(now()->toDateTimeString())
                     ->sortable(),
-                Textarea::make('Nota', 'note')
+                Textarea::make('Nota', 'notes')
                     ->default('Sin notas')
                     ->readonly(),
 

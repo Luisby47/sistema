@@ -44,4 +44,11 @@ class HrDepartment extends Model
     {
         return $this->hasMany(HrJob::class);
     }
+
+
+    // Un departamento tiene muchos empleados
+    public function employees(): HasMany
+    {
+        return $this->hasMany(HrEmployee::class , 'department_id' ,'id'  );
+    }
 }

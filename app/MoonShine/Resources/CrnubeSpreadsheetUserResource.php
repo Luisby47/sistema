@@ -154,11 +154,17 @@ class CrnubeSpreadsheetUserResource extends ModelResource
     /**
      * @return array{id: string,name: string, role_id: string, email: array, password: string}
      */
+
+
     // Esta función se encarga de validar los campos de la tabla al momento de crear o actualizar un registro
     public function rules(Model $item): array
     {
         return [
-            'id' => 'required|exists:res_users,id|unique:crnube_spreadsheet_users,id',
+            'id' => [
+                'required',
+                'exists:res_users,id',
+                Rule::unique('crnube_spreadsheet_users', 'id')->ignore($item->id),
+            ],
             'role_id' => 'required|exists:crnube_spreadsheet_roles,id',
             // Si el email ya existe, no es necesario que se ingrese uno nuevo (excepto si se está actualizando el registro) y debe ser un email válido y único y no puede ser nulo
             'email' => [

@@ -72,7 +72,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 new CrnubeSpreedsheatConceptosResource()
                 ),
             ],'heroicons.outline.user-group')->canSee(static function () {
-                    return auth('moonshine')->user()->role_id === 1;}),
+                    return auth('moonshine')->user()->role_id === 1 && 2;}),
 
             MenuGroup::make('Procesar Planilla', [
                 MenuItem::make(
