@@ -8,3 +8,9 @@
 </p>
 
 ## Sistema de planilla
+
+## Comandos importantes
+Generar carpeta para el storage publico (Cargar imagenes de perfil):
+```bash
+php artisan storage:link 
+```
