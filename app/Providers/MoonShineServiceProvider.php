@@ -56,7 +56,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 ),
             ]),
             MenuGroup::make('Mantenimientos', [
-                MenuItem::make('Empleados',
+                MenuItem::make('Colaboradores',
                     new HrEmployeeResource()
                 ),
                 MenuItem::make('Departamentos',
@@ -65,10 +65,10 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Puestos',
                     new HrJobResource()
                 ),
-                MenuItem::make('Compañias',
+                MenuItem::make('Empresas',
                     new ResCompanyResource()
                 ),
-                MenuItem::make('Conceptos',
+                MenuItem::make('Conceptos Salariales',
                 new CrnubeSpreedsheatConceptosResource()
                 ),
             ],'heroicons.outline.user-group')->canSee(static function () {

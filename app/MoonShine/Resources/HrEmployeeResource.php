@@ -33,7 +33,7 @@ class HrEmployeeResource extends ModelResource
 {
     protected string $model = HrEmployee::class;
 
-    protected string $title = 'Empleados';
+    protected string $title = 'Colaboradores';
 
     public string $column = 'name';
 

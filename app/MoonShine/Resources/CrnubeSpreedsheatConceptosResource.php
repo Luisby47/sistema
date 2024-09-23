@@ -12,6 +12,7 @@ use MoonShine\Enums\Layer;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
@@ -26,7 +27,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 {
     protected string $model = CrnubeSpreedsheatConceptos::class;
 
-    protected string $title = 'Conceptos';
+    protected string $title = 'Conceptos Salariales';
 
     protected bool $createInModal = true;
     protected bool $editInModal = True;
@@ -54,7 +55,8 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ID::make()->sortable(),
                 Text::make('Motivo','motivo')
                 ->required()
-                ->showOnExport(),
+                ->showOnExport()
+                ->useOnImport(),
                 Select::make('Tipo del Concepto','tipo_concepto')
                 ->options([
                     'ING' => 'Ingreso',
@@ -63,7 +65,8 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->required()
                 ->showOnExport()
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->useOnImport(),
                 Select::make('Tipo de valor','tipo_valor')
                 ->options([
                     'MONT' => 'Monto',
@@ -72,15 +75,18 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->required()
                 ->showOnExport()
                 ->sortable()
-                ->searchable(),
+                ->searchable()
+                ->useOnImport(),
                 Number::make('Valor','valor')
                 ->required()
                 ->showOnExport()
                 ->sortable()
-                ->step(0.01),
+                ->step(0.01)
+                ->useOnImport(),
                 Textarea::make('Observaciones','observaciones')
                 ->default("")
                 ->showOnExport()
+                ->useOnImport()
             ]),
         ];
     }
@@ -116,5 +122,11 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
         return [
             'motivo', 'tipo_concepto'
         ];
+    }
+
+    public function import(): ?ImportHandler
+    {
+        return ImportHandler::make('Importar ingresos y deducciones')
+            ->deleteAfter();
     }
 }

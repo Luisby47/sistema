@@ -30,7 +30,7 @@ class ResCompanyResource extends ModelResource
 {
     protected string $model = ResCompany::class;
 
-    protected string $title = 'Compañias';
+    protected string $title = 'Empresas';
 
     // Se define el campo de la tabla que se va a mostrar por referencia o operaciones
     public string $column = 'name';
