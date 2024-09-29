@@ -12,6 +12,7 @@ use MoonShine\Enums\Layer;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
+use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
@@ -126,7 +127,19 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 
     public function import(): ?ImportHandler
     {
+        return null;
+    }
+
+    public function export(): ?ExportHandler
+    {
+        return null;
+    }
+
+    /*
+    public function import(): ?ImportHandler
+    {
         return ImportHandler::make('Importar ingresos y deducciones')
             ->deleteAfter();
     }
+    */
 }
