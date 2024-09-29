@@ -2,3 +2,6 @@
 @tailwind utilities;
 
 
+.body-color {
+    background-color: #00bb00 !important;
+}

@@ -7,3 +7,4 @@
       href="{{ asset('vendor/moonshine/safari-pinned-tab.svg') }}"
       color="{{ moonshineColors()->get('body') }}"
 >
+<link rel="stylesheet" href="/resources/css/app.css">

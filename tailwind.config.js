@@ -2,7 +2,7 @@ const plugin = require('tailwindcss/plugin')
 
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./resources/js/**/*.js', './resources/views/**/*.blade.php'],
+  content: ['./resources/js/**/*.js', './resources/views/**/*.blade.php','./resources/**/*.vue'],
   darkMode: 'class',
   theme: {
     screens: {
