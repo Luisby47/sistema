@@ -1,25 +1,17 @@
 @extends("moonshine::layouts.login")
 
 @section('content')
-<style>
-    .authentication {
-        background-color: #F5F5F5;
-    }
-    footer{
-        color: white;
-        margin: 50px;
-        height: auto;
-    }
-</style>
-<header class="!bg-blue-900 py-4 ">
-    <div class="flex justify-center">
-        <img  src="{{ asset(config('moonshine.logo') ?? 'vendor/moonshine/logo.svg') }}" alt="{{ config('moonshine.title') }}" class="mx-auto w-40">
-    </div>
-</header>
-    <div class="authentication !bg-white ">
+    <div class="authentication">
+        <div class="authentication-logo">
+            <a href="/" rel="home">
+                <img class="h-16"
+                     src="{{ asset(config('moonshine.logo') ?? 'vendor/moonshine/logo.svg') }}"
+                     alt="{{ config('moonshine.title') }}"
+                >
+            </a>
+        </div>
 
-
-        <div class="authentication-content ">
+        <div class="authentication-content">
             <div class="authentication-header">
                 <h1 class="title">
                     @lang(
@@ -39,12 +31,11 @@
                 {!! config('moonshine.auth.footer', '') !!}
             </p>
 
+            <div class="authentication-footer">
+                @include('moonshine::ui.social-auth', [
+                    'title' => trans('moonshine::ui.login.or_socials')
+                ])
+            </div>
         </div>
-
-
     </div>
-<footer class="text-center mt-6">
-    <p class="text-gray-500 text-sm">&copy; Todos los derechos reservados 2024 | Sistema de planillas de RRHH</p>
-</footer>
-
 @endsection
