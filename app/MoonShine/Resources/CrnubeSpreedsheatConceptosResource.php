@@ -31,12 +31,13 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     protected string $title = 'Conceptos Salariales';
 
     protected bool $createInModal = true;
-    protected bool $editInModal = True;
-    protected bool $detailInModal = True;
+    protected bool $editInModal = true;
+    protected bool $detailInModal = true;
 
-    protected bool $import = True;
+    protected bool $import = true;
 
 
+    /*
     protected function onBoot(): void
     {
         $this->getPages()
@@ -46,6 +47,10 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ChangeLog::make('Changelog', $this)
             );
     }
+
+    */
+
+
     /**
      * @return list<MoonShineComponent|Field>
      */

@@ -76,25 +76,12 @@ class CrnubeSpreadsheetUserResource extends ModelResource
     public function fields(): array
     {
         return [
-            /*
-            Select::make('Res User ID', 'id')
-                ->options(
-                    ResUser::whereNotIn('id', CrnubeSpreadsheetUser::pluck('id'))
-                        ->pluck('login', 'id')
-                )
-                ->required()
-                ->sortable()
-                ->searchable(),
-
-            */
-            //BelongsTo::make('Role', 'role', 'name'), //Tengo que cambiar fijarme en moonshine_user_resource
-
 
 
 
             Block::make([
                 Tabs::make([
-                    Tab::make(__('moonshine::ui.resource.main_information'), [
+                    Tab::make(__('Informacion'), [
                         Select::make('Login', 'id')
                             ->options(
                                 ResUser::pluck('login', 'id')->toArray()
@@ -111,7 +98,7 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                             new CrnubeSpreadsheetRoleResource(),
                         )->badge('purple'),
 
-                        Text::make(__('moonshine::ui.resource.name'), 'name')
+                        Text::make(__('Nombre'), 'name')
                             ->required(),
 
                         Image::make('Foto', 'avatar')
@@ -120,28 +107,28 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                             ->dir('moonshine_users')
                             ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif']),
 
-                        Date::make(__('moonshine::ui.resource.created_at'), 'created_at')
+                        Date::make(__('Fecha de creacion'), 'created_at')
                             ->format("d.m.Y")
                             ->default(now()->toDateTimeString())
                             ->sortable()
                             ->hideOnForm(),
 
-                        Email::make(__('moonshine::ui.resource.email'), 'email')
+                        Email::make(__('Email'), 'email')
                             ->sortable()
                             ->required(),
                     ]),
 
-                    Tab::make(__('moonshine::ui.resource.password'), [
-                        Heading::make(__('moonshine::ui.resource.change_password')),
+                    Tab::make(__('Contraseña'), [
+                        Heading::make(__('Cambiar Contraseña')),
 
-                        Password::make(__('moonshine::ui.resource.password'), 'password')
-                            ->customAttributes(['autocomplete' => 'new-password'])
+                        Password::make(__('Contraseña'), 'password')
+                            ->customAttributes(['autocomplete' => 'Nueva Contraseña'])
                             ->hideOnIndex()
                             ->hideOnDetail()
                             ->eye(),
 
-                        PasswordRepeat::make(__('moonshine::ui.resource.repeat_password'), 'password_repeat')
-                            ->customAttributes(['autocomplete' => 'confirm-password'])
+                        PasswordRepeat::make(__('Repetir Contraseña'), 'password_repeat')
+                            ->customAttributes(['autocomplete' => 'Confirmar contraseña'])
                             ->hideOnIndex()
                             ->hideOnDetail()
                             ->eye(),

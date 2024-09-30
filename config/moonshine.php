@@ -99,15 +99,19 @@ return [
                 'driver' => 'eloquent',
                 'model' => CrnubeSpreadsheetUser::class, // Cambiar el modelo de autenticación aquí
             ],
+
         ],
         'pipelines' => [],
+    ],
+    'providers' => [
+        Illuminate\Translation\TranslationServiceProvider::class,
     ],
 
 
 
     'locales' => [
-        'es' //,
-       // 'en'
+        'es',
+        'en'
     ],
 
     /*

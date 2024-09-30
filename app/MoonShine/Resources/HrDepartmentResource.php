@@ -97,4 +97,9 @@ class HrDepartmentResource extends ModelResource
     {
         return [];
     }
+
+    public function model(): string
+    {
+        return HrDepartment::class;
+    }
 }
