@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\CrnubeSpreedsheatConceptos;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\CrnubeSpreedsheatConceptos>
@@ -19,11 +20,11 @@ class CrnubeSpreedsheatConceptosFactory extends Factory
     public function definition(): array
     {
         return [
-            'tipo_concepto' => $this->faker->randomElement(['ING', 'DED']),
-            'tipo_valor' => $this->faker->randomElement(['MONT', 'PORC']),
-            'motivo' => $this->faker->sentence(),
+            'tipo_concepto' => Arr::random(['ING', 'DED']),
+            'tipo_valor' => Arr::random(['MONT', 'PORC']),
+            'motivo' => $this->faker,
             'valor' => $this->faker->numberBetween(100, 5000),
-            'observaciones' => $this->faker->paragraph(),
+            'observaciones' => $this->faker,
         ];
     }
 }

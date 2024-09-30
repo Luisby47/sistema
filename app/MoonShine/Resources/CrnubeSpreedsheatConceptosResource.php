@@ -49,7 +49,10 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     }
 
     */
-
+    public function getActiveActions(): array
+    {
+        return ['create', 'view', 'update', 'delete', 'massDelete'];
+    }
 
     /**
      * @return list<MoonShineComponent|Field>
