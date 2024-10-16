@@ -66,7 +66,7 @@ class HrDepartmentResource extends ModelResource
     {
         return [
             Block::make([
-                ID::make()->sortable(),
+                ID::make()->sortable()->hideOnAll(),
                 Text::make('Nombre', 'name'),
 
 

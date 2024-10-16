@@ -6,6 +6,8 @@ namespace App\Providers;
 
 use App\Models\CrnubeSpreadsheetRole;
 use App\Models\CrnubeSpreedsheatConceptos;
+use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
+use App\MoonShine\Resources\CrnubeSpreadsheetTaxResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
 use App\MoonShine\Resources\CrnubeSpreedsheatConceptosResource;
 use App\MoonShine\Resources\HrDepartmentResource;
@@ -70,6 +72,12 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 ),
                 MenuItem::make('Conceptos Salariales',
                 new CrnubeSpreedsheatConceptosResource()
+                ),
+                MenuItem::make('Parametros de CCSS',
+                new CrnubeSpreadsheetCCSSResource()
+                ),
+                MenuItem::make('Impuestos de Hacienda',
+                new CrnubeSpreadsheetTaxResource()
                 ),
             ],'heroicons.outline.user-group')->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1 && 2;}),

@@ -20,10 +20,9 @@ return new class extends Migration
         });
         // Cuando se ejectute la migración, se creará un rol 'Super Admin' por defecto
         DB::table('crnube_spreadsheet_roles')->insert([
-            'id' => CrnubeSpreadsheetRole::DEFAULT_ROLE_ID,
-            'name' => 'Super Admin',
-            'created_at' => now(),
-            'updated_at' => now(),
+            ['id' => 1, 'name' => 'Super Admin', 'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 2 ,'name' => 'Admin', 'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 3, 'name' => 'User', 'created_at' => now(), 'updated_at' => now(),],
         ]);
 
 

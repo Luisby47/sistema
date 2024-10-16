@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -17,6 +18,9 @@ return new class extends Migration
             $table->string('tipo_valor',4);
             $table->string('motivo');
             $table->decimal('valor',13,2);
+            $table->foreignId('employee_id')->constrained('hr_employee')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->text('observaciones');
             $table->timestamps();
         });

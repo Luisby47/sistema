@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use App\Models\HrEmployee;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreedsheatConceptos;
 
-use MoonShine\ChangeLog\Components\ChangeLog;
-use MoonShine\Enums\Layer;
+
 use MoonShine\Fields\Number;
+use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
-use MoonShine\Handlers\ExportHandler;
-use MoonShine\Handlers\ImportHandler;
+
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
@@ -34,21 +34,10 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     protected bool $editInModal = true;
     protected bool $detailInModal = true;
 
+    protected array $with = ['employee'];
+
     protected bool $import = true;
 
-
-    /*
-    protected function onBoot(): void
-    {
-        $this->getPages()
-            ->formPage()
-            ->pushToLayer(
-                Layer::BOTTOM,
-                ChangeLog::make('Changelog', $this)
-            );
-    }
-
-    */
     public function getActiveActions(): array
     {
         return ['create', 'view', 'update', 'delete', 'massDelete'];
@@ -92,6 +81,14 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->sortable()
                 ->step(0.01)
                 ->useOnImport(),
+                BelongsTo::make('Empleado',
+                    'employee',
+                    static fn (HrEmployee $model) => $model->name_related,
+                    new HrEmployeeResource(),
+                )->badge('green')
+                    ->required()
+                    ->showOnExport()
+                    ->useOnImport(),
                 Textarea::make('Observaciones','observaciones')
                 ->default("")
                 ->showOnExport()
@@ -133,15 +130,6 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
         ];
     }
 
-    public function import(): ?ImportHandler
-    {
-        return null;
-    }
-
-    public function export(): ?ExportHandler
-    {
-        return null;
-    }
 
     /*
     public function import(): ?ImportHandler

@@ -66,7 +66,7 @@ class HrEmployeeResource extends ModelResource
     {
         return [
             Block::make([
-                ID::make()->sortable(),
+                ID::make()->sortable()->hideOnAll(),
                 Text::make('Nombre Relacionado', 'name_related'),
                 Text::make('Identificacion', 'identification_id'),
                 // Belong de address
@@ -93,7 +93,6 @@ class HrEmployeeResource extends ModelResource
                 Email::make('Email', 'work_email'),
                 Text::make('Lugar de trabajo', 'work_location'),
                 Text::make('Genero', 'gender'),
-                Text::make('ID Pasaporte', 'passport_id'),
                 Text::make('Hijos', 'children'),
                 Textarea::make('Nota', 'notes')
                     ->default('Sin notas')

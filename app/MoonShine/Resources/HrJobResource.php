@@ -60,7 +60,7 @@ class HrJobResource extends ModelResource
     {
         return [
             Block::make([
-                ID::make()->sortable(),
+                ID::make()->sortable()->hideOnAll(),
                 Text::make('Nombre', 'name'),
                 Date::make('Fecha de creación', 'create_date')
                     ->format('d/m/Y')
