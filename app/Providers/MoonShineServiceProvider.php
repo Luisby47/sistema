@@ -7,6 +7,7 @@ namespace App\Providers;
 use App\Models\CrnubeSpreadsheetRole;
 use App\Models\CrnubeSpreedsheatConceptos;
 use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
+use App\MoonShine\Resources\CrnubeSpreadsheetJornadaResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetTaxResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
 use App\MoonShine\Resources\CrnubeSpreedsheatConceptosResource;
@@ -70,14 +71,17 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Empresas',
                     new ResCompanyResource()
                 ),
+                MenuItem::make('Jornadas laborales',
+                    new CrnubeSpreadsheetJornadaResource()
+                ),
                 MenuItem::make('Conceptos Salariales',
-                new CrnubeSpreedsheatConceptosResource()
+                    new CrnubeSpreedsheatConceptosResource()
                 ),
                 MenuItem::make('Parametros de CCSS',
-                new CrnubeSpreadsheetCCSSResource()
+                    new CrnubeSpreadsheetCCSSResource()
                 ),
                 MenuItem::make('Impuestos de Hacienda',
-                new CrnubeSpreadsheetTaxResource()
+                    new CrnubeSpreadsheetTaxResource()
                 ),
             ],'heroicons.outline.user-group')->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1 && 2;}),

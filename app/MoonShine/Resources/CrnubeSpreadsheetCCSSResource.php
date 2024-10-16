@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetCCSS;
 
 use MoonShine\Fields\Number;
+use MoonShine\Fields\Text;
 use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
@@ -52,9 +53,8 @@ class CrnubeSpreadsheetCCSSResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
-                Number::make('Rango de Impuesto', 'tax_range')->sortable()->required(),
-                Number::make('Rango de Columna', 'col_range')->sortable()->required(),
-                Number::make('Porcentaje', 'percentage')->sortable()->required(),
+                Text::make('Nombre', 'name')->sortable()->readonly(),
+                Number::make('Valor', 'value')->sortable()->required(),
             ]),
         ];
     }

@@ -54,8 +54,9 @@ class CrnubeSpreadsheetTaxResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
-                Text::make('Nombre', 'name')->sortable()->readonly(),
-                Number::make('Valor', 'value')->sortable()->required(),
+                Number::make('Rango de Impuesto', 'tax_range')->sortable()->required(),
+                Number::make('Rango de Columna', 'col_range')->sortable()->required(),
+                Number::make('Porcentaje', 'percentage')->sortable()->required(),
             ]),
         ];
     }

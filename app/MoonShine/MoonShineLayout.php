@@ -60,7 +60,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
                             //Este select se puede usar para cambiar de compania en el sistema de planillas los cuales estan en la tabla res_company, estonces el usuario debe selecionar una opcion y se guardar esa opcion en la session del usuario  y se debe mostrar en el topbar
 
-                            /*
+
                             Div::make([
                                 Select::make('Empresas', 'company')
                                     ->options($companies)
@@ -70,7 +70,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
                                     //->onChange(static fn($value) => session(['company' => $value]))
 
                             ])->customAttributes(['style' =>  'display: flex !important; justify-content: center !important; align-items: center !important; height: 100% !important; ']),
-                            */
+
                             /*
                               Div::make([Dropdown::make(
                                 toggler: 'Cambiar Compania',
@@ -89,10 +89,6 @@ final class MoonShineLayout implements MoonShineLayoutContract
                 ]),
             LayoutBlock::make([
                 Flash::make(),
-
-
-
-
 
                 Header::make([
                     Search::make(),
