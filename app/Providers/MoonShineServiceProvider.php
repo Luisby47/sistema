@@ -53,10 +53,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     {
         return [
             MenuGroup::make('Gestionar Acciones de Personal', [
-                MenuItem::make(
-                    'Usuarios',
-                    new MoonShineUserResource()
-                ),
+
             ]),
             MenuGroup::make('Mantenimientos', [
                 MenuItem::make('Colaboradores',
@@ -87,18 +84,12 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                     return auth('moonshine')->user()->role_id === 1 && 2;}),
 
             MenuGroup::make('Procesar Planilla', [
-                MenuItem::make(
-                    'Usuarios',
-                    new MoonShineUserResource()
-                ),
+
             ]),
 
 
             MenuGroup::make('Gestionar Reportes', [
-                MenuItem::make(
-                    'Gestionar Reportes',
-                    new MoonShineUserResource()
-                ),
+
             ]),
 
             MenuGroup::make('Gestionar Usuarios y Roles', [

@@ -66,23 +66,12 @@ final class MoonShineLayout implements MoonShineLayoutContract
                                     ->options($companies)
                                     ->default(session('company', key($companies)))
                                     ->native()
-                                    ->customAttributes(['style' => 'margin: 0 !important; '])
-                                    //->onChange(static fn($value) => session(['company' => $value]))
 
-                            ])->customAttributes(['style' =>  'display: flex !important; justify-content: center !important; align-items: center !important; height: 100% !important; ']),
 
-                            /*
-                              Div::make([Dropdown::make(
-                                toggler: 'Cambiar Compania',
-                            )
-                                ->items([
-                                    Link::make('#', 'Link 1'),
-                                    Link::make('#', 'Link 2'),
-                                    Link::make('#', 'Link 3'),
-                                ])
-                                ->searchable()
-                                ->searchPlaceholder('Search item')])->customAttributes(["style = 'background: red !important ;'"]),
-                            */
+
+
+
+                            ]),
                              Profile::make() ],
 
                     )
