@@ -17,6 +17,20 @@ final class ResetPassword
             ])
             ->action(route('password.reset.update')) // Route name
             ->fields([
+                Text::make('Token', 'token')
+                    ->required()
+                    ->customAttributes([
+                        'autofocus' => true,
+                        'autocomplete' => 'token',
+                    ])
+                    ->hideOnForm(),
+                Text::make('Email', 'username')
+                    ->required()
+                    ->customAttributes([
+                        'autofocus' => true,
+                        'autocomplete' => 'username',
+                        'readonly' => true
+                    ]),
                 Password::make(trans('moonshine::ui.resource.password'), 'password')
                     ->required()->eye(),
                 PasswordRepeat::make(trans('moonshine::ui.resource.repeat_password'), 'password_repeat')

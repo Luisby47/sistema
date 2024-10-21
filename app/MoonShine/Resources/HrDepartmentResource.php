@@ -9,7 +9,7 @@ use App\Models\ResCompany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\HrDepartment;
-
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\RedirectResponse;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Relationships\BelongsTo;
@@ -76,8 +76,8 @@ class HrDepartmentResource extends ModelResource
 
 
 
-        $request->session()->put('company', $request->input('company'));
-        if ($request->session()->has('company')) {
+       Cache::put('company', $request->input('company'));
+        if (Cache::has('company')) {
             MoonShineUI::toast('Se cambio la empresa con existo', 'success');
         }
         else {
