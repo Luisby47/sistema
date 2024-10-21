@@ -11,6 +11,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 use MoonShine\Http\Controllers\MoonShineController;
+use MoonShine\MoonShineRequest;
+use MoonShine\MoonShineUI;
 
 class ResetPasswordController extends MoonShineController
 {
@@ -45,7 +47,9 @@ class ResetPasswordController extends MoonShineController
     {
         $form =  ResetPassword::class;
 
-        return view('vendor.moonshine.auth.reset-password', [ 'form' => new $form(), 'token' => $token, 'email' => $request->get('email', '')]);
+        return view('vendor.moonshine.auth.reset-password',
+            [ 'form' => new $form(), 'token' => $token, 'email' => $request->get('email', '')]);
+
     }
 
     public function recoverUpdate(Request $request) : RedirectResponse

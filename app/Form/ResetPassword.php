@@ -20,16 +20,14 @@ final class ResetPassword
                 Text::make('Token', 'token')
                     ->required()
                     ->customAttributes([
-                        'autofocus' => true,
                         'autocomplete' => 'token',
                     ])
-                    ->hideOnForm(),
-                Text::make('Email', 'username')
-                    ->required()
+                    ->hideOnAll(),
+                Text::make('Email', 'email')
                     ->customAttributes([
-                        'autofocus' => true,
-                        'autocomplete' => 'username',
+                        'autocomplete' => 'email',
                         'readonly' => true
+
                     ]),
                 Password::make(trans('moonshine::ui.resource.password'), 'password')
                     ->required()->eye(),
