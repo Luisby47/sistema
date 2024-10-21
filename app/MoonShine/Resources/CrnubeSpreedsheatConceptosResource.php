@@ -81,14 +81,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->sortable()
                 ->step(0.01)
                 ->useOnImport(),
-                BelongsTo::make('Empleado',
-                    'employee',
-                    static fn (HrEmployee $model) => $model->name_related,
-                    new HrEmployeeResource(),
-                )->badge('green')
-                    ->required()
-                    ->showOnExport()
-                    ->useOnImport(),
+
                 Textarea::make('Observaciones','observaciones')
                 ->default("")
                 ->showOnExport()
