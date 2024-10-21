@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo; //Importante esto para BelongsTo
 use MoonShine\Traits\Models\HasMoonShineSocialite;
+use Illuminate\Auth\Passwords\CanResetPassword;
 
 
 /**
@@ -18,6 +19,7 @@ class CrnubeSpreadsheetUser extends Authenticatable
     use HasMoonShineSocialite;
     use HasFactory;
     use Notifiable;
+    use CanResetPassword;
 
 
     protected $table = 'crnube_spreadsheet_users';

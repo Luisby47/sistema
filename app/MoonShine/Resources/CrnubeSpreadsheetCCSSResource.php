@@ -7,6 +7,7 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetCCSS;
 
+use MoonShine\Exceptions\FieldException;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Text;
 use MoonShine\Handlers\ExportHandler;
@@ -47,6 +48,7 @@ class CrnubeSpreadsheetCCSSResource extends ModelResource
 
     /**
      * @return list<MoonShineComponent|Field>
+     * @throws FieldException
      */
     public function fields(): array
     {

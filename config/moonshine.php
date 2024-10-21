@@ -18,6 +18,7 @@ return [
     'title' => env('MOONSHINE_TITLE', 'Sistema de Planillas WG'),
     'logo' => env('MOONSHINE_LOGO', '/images/logo.svg'),
     'logo_small' => env('MOONSHINE_LOGO_SMALL', '/images/logo.svg'),
+    'footer' => env('MOONSHINE_FOOTER', 'Sistema de Planillas WG'), //No funciona
 
     'styles' => [
         '.logo-lg' => [

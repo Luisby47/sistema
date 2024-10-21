@@ -62,10 +62,29 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
 
                             Div::make([
-                                Select::make('Empresas', 'company')
+                                Select::make( '','company')
                                     ->options($companies)
                                     ->default(session('company', key($companies)))
                                     ->native()
+
+
+                                ,
+
+                                 // Botón que aparece al intentar cambiar la empresa con confirmación
+
+
+                                    ActionButton::make(
+                                        label: 'Confirmar cambio',
+                                        url: route('change-company') // URL de la ruta que cambiará la empresa
+                                    )
+                                        ->withConfirm(
+                                            'Confirmar cambio de empresa',
+                                            '¿Estás seguro de que deseas cambiar de empresa?',
+                                            'Confirmar',
+                                        )// Este botón empieza oculto, se muestra al seleccionar una empresa
+
+
+
 
 
 

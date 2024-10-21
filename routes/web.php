@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\CrnubeAuthController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Company\CompanyController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,31 @@ if (config('moonshine.auth.enable', true)) {
 }
 
 Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('change-company');
+
+
+
+
+#Auth Passwords
+if (config('moonshine.auth.enable', true)) {
+    Route::controller(ResetPasswordController::class)
+        ->group(static function (): void {
+            Route::get('/forgot-password', 'index')->name('password.request');
+            Route::post('/forgot-password', 'send')->name('password.request.send');
+
+            Route::get('/reset-password/{token}', 'recoverIndex')
+                ->name('password.reset');
+
+            Route::post('/reset-password', 'recoverUpdate')
+                ->name('password.reset.update');
+
+
+        });
+}
+
+
+
+/*
+Route::middleware(config('moonshine.auth.middleware', []))->group(function (): void {
+});
+*/
+
