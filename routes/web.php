@@ -34,10 +34,10 @@ if (config('moonshine.auth.enable', true)) {
             Route::get('/forgot-password', 'index')->name('password.request');
             Route::post('/forgot-password', 'send')->name('password.request.send');
 
-            Route::get('/reset-password/{token}', [ResetPasswordController::class, 'recoverIndex'])
+            Route::get('/reset-password/{token}', 'recoverIndex')
                 ->name('password.reset');
 
-            Route::post('/reset-password', [ResetPasswordController::class, 'recoverUpdate'])
+            Route::post('/reset-password', 'recoverUpdate')
                 ->name('password.reset.update');
 
 

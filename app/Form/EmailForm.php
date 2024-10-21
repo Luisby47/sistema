@@ -21,7 +21,7 @@ final class EmailForm
                     ->required()
                     ->customAttributes([
                         'autofocus' => true,
-                        'autocomplete' => 'email',
+                        'autocomplete' => 'username',
                         'value' => old('email')
 
                     ]),
