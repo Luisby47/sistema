@@ -2,6 +2,7 @@
 
 namespace App\MoonShine\Pages;
 
+use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Components\FlexibleRender;
 use MoonShine\Components\FormBuilder;
 use MoonShine\Decorations\Block;
@@ -65,6 +66,8 @@ class ProfilePage extends Page
                             ->removable()
                             ->allowedExtensions(['jpg', 'png', 'jpeg', 'gif']),
                     ]),
+
+
 
                     Tab::make(trans('moonshine::ui.resource.password'), [
                         Heading::make(__('moonshine::ui.resource.change_password')),

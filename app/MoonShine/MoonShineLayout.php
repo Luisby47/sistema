@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\MoonShine;
 
 use App\Models\ResCompany;
-use App\MoonShine\Resources\ResCompanyResource;
+
 use MoonShine\Components\Layout\{Content,
     Div,
     Flash,
@@ -18,22 +18,37 @@ use MoonShine\Components\Layout\{Content,
     Search,
     TopBar};
 
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use MoonShine\ActionButtons\ActionButton;
-use MoonShine\Components\Dropdown;
-use MoonShine\Components\Link;
+
 use MoonShine\Components\When;
 use MoonShine\Contracts\MoonShineLayoutContract;
-use MoonShine\Fields\Relationships\BelongsTo;
+
 use MoonShine\Fields\Select;
+use MoonShine\MoonShineRequest;
+use MoonShine\MoonShineUI;
 
 final class MoonShineLayout implements MoonShineLayoutContract
 {
+
+    /*
+    public function changeCompany(MoonShineRequest $request): RedirectResponse
+    {
+
+        $request->session()->put('company', $request->input('company'));
+        MoonShineUI::toast('Se cambio la empresa con existo', 'success');
+
+        return back();
+    }
+    */
 
     public static function build(): LayoutBuilder
     {
 
 
-        $companies = ResCompany::all()->pluck('name', 'id')->toArray();
+        $companies = ResCompany::query()->pluck('name', 'id')->toArray();
+        $company = Cache::get('company', array_key_first($companies));
         return LayoutBuilder::make([
             TopBar::make([
                 Menu::make()->top(),
@@ -64,32 +79,16 @@ final class MoonShineLayout implements MoonShineLayoutContract
                             Div::make([
                                 Select::make( '','company')
                                     ->options($companies)
-                                    ->default(session('company', key($companies)))
-                                    ->native()
-
-
-                                ,
+                                    ->default($company)
+                                    ->native(),
 
                                  // Botón que aparece al intentar cambiar la empresa con confirmación
-
-
-                                    ActionButton::make(
-                                        label: 'Confirmar cambio',
-                                        url: route('change-company') // URL de la ruta que cambiará la empresa
-                                    )
+                                    ActionButton::make('Confirmar cambio')
                                         ->withConfirm(
                                             'Confirmar cambio de empresa',
                                             '¿Estás seguro de que deseas cambiar de empresa?',
                                             'Confirmar',
-                                        )// Este botón empieza oculto, se muestra al seleccionar una empresa
-
-
-
-
-
-
-
-
+                                        )->method('changeCompany', params: [ 'company' => 'company' ]),
                             ]),
                              Profile::make() ],
 
@@ -120,4 +119,6 @@ final class MoonShineLayout implements MoonShineLayoutContract
             //Cambiar el tipo de body class a layout-page
         ])->bodyClass('theme-minimalistic');
     }
+
+
 }
