@@ -48,9 +48,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
 
         $companies = ResCompany::query()->pluck('name', 'id')->toArray();
-
         $company = Cache::get('company', array_key_first($companies));
-
         return LayoutBuilder::make([
             TopBar::make([
                 Menu::make()->top(),
@@ -82,20 +80,15 @@ final class MoonShineLayout implements MoonShineLayoutContract
                                 Select::make( '','company')
                                     ->options($companies)
                                     ->default($company)
-                                    ->native()
-                                    ->afterApply(static function (MoonShineRequest $request) {
-                                        Cache::put('company', $request->input('company'));
-                                        MoonShineUI::toast('Se cambio la empresa con existo', 'success');
-                                        return back();
-                                    }),
+                                    ->native(),
 
                                  // Botón que aparece al intentar cambiar la empresa con confirmación
-                                    ActionButton::make((string) $company)
+                                    ActionButton::make('Confirmar cambio')
                                         ->withConfirm(
                                             'Confirmar cambio de empresa',
                                             '¿Estás seguro de que deseas cambiar de empresa?',
                                             'Confirmar',
-                                        )->method('changeCompany', params: [ 'company' => (string) $company ]),
+                                        )->method('changeCompany', params: [ 'company' => 'company' ]),
                             ]),
                              Profile::make() ],
 

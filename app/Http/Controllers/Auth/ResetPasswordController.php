@@ -58,7 +58,7 @@ class ResetPasswordController extends MoonShineController
         ]);
 
         $status = Password::reset(
-            $request->only('username', 'password', 'password_repeat', 'token'),
+            $request->only('email', 'password', 'password_repeat', 'token'),
             function (CrnubeSpreadsheetUser $user, string $password) {
                 $user->forceFill([
                     'password' => bcrypt($password)
