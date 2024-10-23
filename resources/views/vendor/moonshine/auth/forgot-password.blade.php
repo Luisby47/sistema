@@ -11,14 +11,16 @@
         footer{
             padding: 20px;
         }
+
+
     </style>
     <header class="w-full bg-blue-900 py-8 flex justify-center items-center ">
-        <div class="text-center ">
+        <a href="/admin" rel="home" class="text-center ">
             <img class="h-32"
                  src="{{ asset('images/login-logo.png') }}"
                  alt="{{ config('moonshine.title') }}"
             >
-        </div>
+        </a>
     </header>
     <div class="authentication">
         <div class="authentication-content">
@@ -32,8 +34,15 @@
                 </p>
             </div>
 
-            {!! $form() !!}
 
+            <!-- Mostrar mensajes de éxito o error -->
+            @if (session('status'))
+                <x-moonshine::alert type="success">
+                    {{ session('status') }}
+                </x-moonshine::alert>
+            @endif
+
+            {!! $form() !!}
 
         </div>
     </div>

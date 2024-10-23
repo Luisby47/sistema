@@ -20,35 +20,41 @@ use MoonShine\Components\Layout\{Content,
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
+
+
 use MoonShine\ActionButtons\ActionButton;
 
+use MoonShine\Components\FormBuilder;
 use MoonShine\Components\When;
 use MoonShine\Contracts\MoonShineLayoutContract;
 
+use MoonShine\Decorations\Block;
 use MoonShine\Fields\Select;
+use MoonShine\Fields\Text;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
+
+
 
 final class MoonShineLayout implements MoonShineLayoutContract
 {
 
-    /*
     public function changeCompany(MoonShineRequest $request): RedirectResponse
     {
 
-        $request->session()->put('company', $request->input('company'));
+        Cache()->put('company', $request->input('company'));
         MoonShineUI::toast('Se cambio la empresa con existo', 'success');
 
         return back();
     }
-    */
+
+
 
     public static function build(): LayoutBuilder
     {
 
 
-        $companies = ResCompany::query()->pluck('name', 'id')->toArray();
-        $company = Cache::get('company', array_key_first($companies));
+
         return LayoutBuilder::make([
             TopBar::make([
                 Menu::make()->top(),
@@ -67,7 +73,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
 
 
-            ])
+            ]   )
                 ->actions([
                     When::make(
                         static fn() => config('moonshine.auth.enable', true),
@@ -75,21 +81,24 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
                             //Este select se puede usar para cambiar de compania en el sistema de planillas los cuales estan en la tabla res_company, estonces el usuario debe selecionar una opcion y se guardar esa opcion en la session del usuario  y se debe mostrar en el topbar
 
+                                FormBuilder::make()
+                                    ->action(route('changeCompany'))
+                                    ->customAttributes(['class' => 'flex-col items-center  '])
+                                    ->fields([
+                                        Select::make('', 'company')
+                                            ->options(ResCompany::query()->pluck('name', 'id')->toArray())
+                                            ->default(Cache::get('company'))
+                                            ->native()
+                                            ->customAttributes(['style' => 'border: 3px solid white !important;', 'class' => 'w-32 h-px rounded-md text-xs'])
 
-                            Div::make([
-                                Select::make( '','company')
-                                    ->options($companies)
-                                    ->default($company)
-                                    ->native(),
+                                    ])
+                                    ->submit('Cambiar Empresa', ['class' => 'h-px  bg-blue-500 text-black rounded-md text-xs flex items-center']),
 
-                                 // Botón que aparece al intentar cambiar la empresa con confirmación
-                                    ActionButton::make('Confirmar cambio')
-                                        ->withConfirm(
-                                            'Confirmar cambio de empresa',
-                                            '¿Estás seguro de que deseas cambiar de empresa?',
-                                            'Confirmar',
-                                        )->method('changeCompany', params: [ 'company' => 'company' ]),
-                            ]),
+
+
+
+
+
                              Profile::make() ],
 
                     )
@@ -99,6 +108,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
                 Header::make([
                     Search::make(),
+
 
                 ]),
 

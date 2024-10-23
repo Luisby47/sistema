@@ -1,0 +1,21 @@
+@import 'tailwindcss/base';
+@media (min-width: 1024px){body.theme-minimalistic .layout-menu-horizontal{}}body.theme-minimalistic .layout-menu-horizontal .menu-logo img{height:7.50rem}
+@media (min-width: 1024px){body.theme-minimalistic .layout-menu-horizontal .menu-logo img{height:7.50rem} .lo}
+
+@media (min-width: 1024px) {
+    body.theme-minimalistic .layout-menu-horizontal {
+        height: 8rem;
+    }
+}body.theme-minimalistic .layout-menu-horizontal {
+     height: 8rem;
+ }
+
+ /*
+padding-top: 1rem;
+padding-bottom: 1rem;
+
+
+
+.layout-menu-horizontal .menu-actions
+
+  */

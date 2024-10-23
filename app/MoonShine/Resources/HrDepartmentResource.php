@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\HrDepartment;
 
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use MoonShine\Components\Alert;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Relationships\HasOne;
@@ -25,6 +28,7 @@ use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Field;
 use MoonShine\Components\MoonShineComponent;
+use PHPUnit\Event\Telemetry\System;
 
 /**
  * @extends ModelResource<HrDepartment>
@@ -59,35 +63,7 @@ class HrDepartmentResource extends ModelResource
         return null;
     }
 
-    public function changeCompany(MoonShineRequest $request): RedirectResponse
-    {
-        // Validar si la empresa está en las opciones
-        /*
-        $companyId = $request->input('company');
 
-
-        if ($companyId === null) {
-            MoonShineUI::toast('Null', 'error');
-
-        } else {
-            MoonShineUI::toast('No null', 'error');
-        }
-        */
-
-
-
-        $request->session()->put('company', $request->input('company'));
-        if ($request->session()->has('company')) {
-            MoonShineUI::toast('Se cambio la empresa con existo', 'success');
-        }
-        else {
-            MoonShineUI::toast('No se pudo cambiar la empresa', 'error');
-        }
-
-
-
-        return back();
-    }
 
 
     /**
@@ -102,7 +78,7 @@ class HrDepartmentResource extends ModelResource
 
 
                 // Relación con la compañia a la que pertenece el departamento
-                BelongsTo::make('Compañia', 'company', static fn (ResCompany $model) => $model->name, new ResCompanyResource()),
+                BelongsTo::make('Empresa', 'company', static fn (ResCompany $model) => $model->name, new ResCompanyResource()),
 
 
                 Date::make('Fecha de creación', 'create_date')

@@ -93,7 +93,8 @@ export default {
           'color, background-color, border-color, text-decoration-color, box-shadow, fill, stroke',
       },
       transitionDuration: {
-        DEFAULT: '350ms',
+        DEFAULT: '10000ms', '10000': '10000ms',
+
       },
       zIndex: {
         '1': '1',
@@ -103,7 +104,7 @@ export default {
         '5': '5',
         modal: '1070',
         offcanvas: '1050',
-        toast: '1500',
+        toast: '5000',
       },
       opacity: {
         '15': '.15',

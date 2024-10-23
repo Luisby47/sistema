@@ -35,12 +35,13 @@ return [
         'middlewares' => [
             SecurityHeadersMiddleware::class,
         ],
-        'notFoundHandler' => MoonShineNotFoundException::class,
+        'notFoundHandler' => MoonShineNotFoundException::class, //Es posible cambiar la página de error 404
     ],
 
     'use_migrations' => true,
     'use_notifications' => false,
     'use_theme_switcher' => true,
+
 
 
 
@@ -106,20 +107,20 @@ return [
     ],
     'providers' => [
         Illuminate\Translation\TranslationServiceProvider::class,
+        App\Providers\MoonShineServiceProvider::class,
+
     ],
 
 
 
-    'locales' => [
-        'es',
-        'en'
-    ],
+
+    'locales' => 'es',
 
     /*
-    'locales' => [
-        'enabled' => false,
-    ],
-    */
+        'locales' => [
+            'enabled' => false,
+        ],
+        */
 
 
     'global_search' => [

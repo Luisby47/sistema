@@ -67,7 +67,7 @@ class HrJobResource extends ModelResource
                     ->default(now()->toDateTimeString())
                     ->sortable(),
 
-                BelongsTo::make('Compañia', 'company',
+                BelongsTo::make('Empresa', 'company',
                     static fn (ResCompany $model) => $model->name, new ResCompanyResource()
                 )->badge('green'),
 

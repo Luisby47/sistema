@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\PasswordResetNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,6 +14,7 @@ use Illuminate\Auth\Passwords\CanResetPassword;
 
 /**
  * @property mixed $role_id
+ * @property mixed $email
  */
 class CrnubeSpreadsheetUser extends Authenticatable
 {
@@ -38,7 +40,6 @@ class CrnubeSpreadsheetUser extends Authenticatable
 
 
 
-
     public function role() : BelongsTo //Importante esto para BelongsTo
     {
         return $this->belongsTo(CrnubeSpreadsheetRole::class , 'role_id' ,'id'  ); // Se debe cambiar el nombre de la clase
@@ -53,5 +54,16 @@ class CrnubeSpreadsheetUser extends Authenticatable
     public function resUser() : BelongsTo
     {
         return $this->belongsTo(ResUser::class, 'id', 'id');
+    }
+
+
+
+
+
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $url = route('password.reset', ['token' => $token, 'email' => $this->email]);
+        $this->notify(new PasswordResetNotification($url));
     }
 }

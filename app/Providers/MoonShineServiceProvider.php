@@ -56,7 +56,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 
             ]),
             MenuGroup::make('Mantenimientos', [
-                MenuItem::make('Colaboradores',
+                MenuItem::make('Empleados',
                     new HrEmployeeResource()
                 ),
                 MenuItem::make('Departamentos',
@@ -129,19 +129,23 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
         parent::boot();
 
         moonShineAssets()->add([
-            '/css/app.css',
+            asset('vendor/moonshine/assets/custom.css')
 
         ]);
+
 
         moonshineColors()
             ->background('#09304d')
             ->content('#061b2a')
-            ->tableRow('#061b2a')
-            ->dividers('#D9D9D9')
-            ->borders('#D9D9D9')
+            ->tableRow('#143e5c')
+            ->dividers('#09304d')
+            ->borders('#061b2a')
             ->buttons('#061b2a')
+            ->secondary('#D9D9D9', dark: true)
+            ->primary('#09304d', dark: true)
             ->primary('#061b2a')
-            ->secondary('#D9D9D9');
+            ->secondary('#061b2a');
+
     }
 
 }

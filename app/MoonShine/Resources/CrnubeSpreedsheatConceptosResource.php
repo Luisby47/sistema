@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreedsheatConceptos;
 
 
+use Illuminate\Validation\Rule;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
@@ -34,6 +35,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     protected bool $editInModal = true;
     protected bool $detailInModal = true;
 
+
     protected array $with = ['employee'];
 
     protected bool $import = true;
@@ -51,11 +53,12 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable(),
-                Text::make('Motivo','motivo')
+                Text::make('Motivo','name')
                 ->required()
                 ->showOnExport()
+                    ->placeholder('Ejemplo: Aguinaldo')
                 ->useOnImport(),
-                Select::make('Tipo del Concepto','tipo_concepto')
+                Select::make('Tipo del Concepto','type')
                 ->options([
                     'ING' => 'Ingreso',
                     'DED' => 'Deduccion'
@@ -65,7 +68,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->sortable()
                 ->searchable()
                 ->useOnImport(),
-                Select::make('Tipo de valor','tipo_valor')
+                Select::make('Tipo de valor','value_type')
                 ->options([
                     'MONT' => 'Monto',
                     'PORC' => 'Porcentaje',
@@ -75,14 +78,16 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->sortable()
                 ->searchable()
                 ->useOnImport(),
-                Number::make('Valor','valor')
+                Number::make('Valor','value')
                 ->required()
                 ->showOnExport()
                 ->sortable()
                 ->step(0.01)
+                    ->placeholder('0.00 - 100.00')
+
                 ->useOnImport(),
 
-                Textarea::make('Observaciones','observaciones')
+                Textarea::make('Observaciones','note')
                 ->default("")
                 ->showOnExport()
                 ->useOnImport()
@@ -99,10 +104,10 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     public function rules(Model $item): array
     {
         return [
-            'motivo' => ['required', 'string'],
-            'tipo_concepto' => ['required', 'in:ING,DED'],
-            'tipo_valor' => ['required', 'in:MONT,PORC'],
-            'valor' => ['required', 'numeric', function ($attribute, $value, $fail) use ($item) {
+            'name' => ['required', 'string' ,Rule::unique('crnube_spreadsheet_conceptos', 'name')->ignore($item) ],
+            'type' => ['required', 'in:ING,DED'],
+            'value_type' => ['required', 'in:MONT,PORC'],
+            'value' => ['required', 'numeric', function ($attribute, $value, $fail) use ($item) {
                 $tipoValor = $item->tipo_valor ?? request()->input('tipo_valor');
 
                 if($tipoValor === 'MONT' && $value != intval($value)) {
@@ -112,14 +117,14 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                     $fail('Debe incluir los decimales del valor');
                 }
             }],
-            'observaciones' => [''],
+            'note' => [''],
         ];
     }
 
     public function search(): array
     {
         return [
-            'motivo', 'tipo_concepto'
+
         ];
     }
 

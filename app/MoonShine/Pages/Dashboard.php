@@ -6,6 +6,10 @@ namespace App\MoonShine\Pages;
 
 
 use MoonShine\Components\MoonShineComponent;
+use MoonShine\Components\Title;
+use MoonShine\Decorations\Block;
+use MoonShine\Fields\Template;
+use MoonShine\Fields\Text;
 use MoonShine\Pages\Page;
 
 class Dashboard extends Page
@@ -22,7 +26,7 @@ class Dashboard extends Page
 
     public function title(): string
     {
-        return $this->title ?: 'Dashboard';
+        return $this->title ?: 'Inicio';
     }
 
     /**
@@ -30,6 +34,10 @@ class Dashboard extends Page
      */
     public function components(): array
 	{
-		return [];
+		return [
+            Title::make('¡Bienvenido al Sistema de Planillas de WG!')
+
+
+        ];
 	}
 }

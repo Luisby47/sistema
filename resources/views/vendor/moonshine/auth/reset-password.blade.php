@@ -14,12 +14,12 @@
         }
     </style>
     <header class="w-full bg-blue-900 py-8 flex justify-center items-center ">
-        <div class="text-center ">
+        <a href="/admin" rel="home" class="text-center ">
             <img class="h-32"
                  src="{{ asset('images/login-logo.png') }}"
                  alt="{{ config('moonshine.title') }}"
             >
-        </div>
+        </a>
     </header>
     <div class="authentication">
 
@@ -33,6 +33,10 @@
                     Ingresa tu nueva contraseña.
                 </p>
             </div>
+
+            @csrf
+
+            <input type="hidden" name="token" value="{{$token}}">
 
             {!! $form() !!}
 

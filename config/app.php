@@ -124,4 +124,9 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'), // 'file', 'database', 'file' antes estaba databse
     ],
 
+
+    'providers' => [
+        // Otros providers
+        App\Providers\MoonShineServiceProvider::class,
+    ],
 ];

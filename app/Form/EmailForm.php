@@ -7,8 +7,10 @@ use MoonShine\Fields\Text;
 
 final class EmailForm
 {
+
     public function __invoke(): FormBuilder
     {
+
         return FormBuilder::make()
             ->customAttributes([
                 'class' => 'authentication-form',

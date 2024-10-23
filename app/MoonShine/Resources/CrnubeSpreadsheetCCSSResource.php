@@ -55,8 +55,15 @@ class CrnubeSpreadsheetCCSSResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
-                Text::make('Nombre', 'name')->sortable()->readonly(),
-                Number::make('Valor', 'value')->sortable()->required(),
+                Text::make('Aporte', 'name')->sortable()->readonly(),
+                Number::make('Porcetanje %', 'value')
+                    ->sortable()
+                    ->required()
+                    ->step(0.01)
+                    ->placeholder('0.00 - 100.00')
+                    ->min(0.00)
+                    ->max(100.00)
+                    ->expansion('%'),
             ]),
         ];
     }

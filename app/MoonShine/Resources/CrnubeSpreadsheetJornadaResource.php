@@ -7,6 +7,8 @@ namespace App\MoonShine\Resources;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetJornada;
 
+use Illuminate\Validation\Rule;
+use MoonShine\Exceptions\FieldException;
 use MoonShine\Fields\Number;
 use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
@@ -34,16 +36,28 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
 
     /**
      * @return list<MoonShineComponent|Field>
+     * @throws FieldException
+     */
+    public function getActiveActions(): array
+    {
+        return ['view', 'update'];
+    }
+
+    /**
+     * @throws FieldException
      */
     public function fields(): array
     {
         return [
             Block::make([
-                ID::make()->sortable(),
-                Text::make('Nombre','nombre')
-                ->required(),
-                Number::make('Cantidad de días','cant_dias')
-                ->required(),
+                ID::make()->sortable()->hideOnAll(),
+                Text::make('Nombre de Jornada Laboral','name')
+                ->sortable()->readonly(),
+                Number::make('Cantidad de días','days')
+                ->required()
+                ->placeholder('0-31')
+                ->max(31)
+                ->min(0),
             ]),
         ];
     }
@@ -54,7 +68,10 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
      * @return array<string, string[]|string>
      * @see https://laravel.com/docs/validation#available-validation-rules
      */
-    public function rules(Model $item): array { return []; }
+    public function rules(Model $item): array { return [
+        'name' => ['required', 'string', Rule::unique('crnube_spreadsheet_jornadas')->ignore($item->id)],
+
+    ]; }
 
     public function import(): ?ImportHandler
     {

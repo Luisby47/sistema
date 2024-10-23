@@ -48,6 +48,10 @@ class CrnubeSpreadsheetUserResource extends ModelResource
     protected bool $createInModal = true;
     protected bool $editInModal = true;
 
+    protected bool $errorsAbove = false;
+
+
+
     protected array $with = ['role']; // MUY IMPORTANTE PARA QUE FUNCIONE EL BELONGS TO Y ROLES EN EL MENU
     protected bool $withPolicy = true; // Esta variable se encarga de habilitar o deshabilitar la política de acceso a la tabla (Importante despues de create policy a un recurso)
 
@@ -99,7 +103,7 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                         )->badge('purple'),
 
                         Text::make(__('Nombre'), 'name')
-                            ->required(),
+                            ->required()->placeholder('Ejemplo: Juan Perez'),
 
                         Image::make('Foto', 'avatar')
                             ->showOnExport()
@@ -115,7 +119,8 @@ class CrnubeSpreadsheetUserResource extends ModelResource
 
                         Email::make(__('Email'), 'email')
                             ->sortable()
-                            ->required(),
+                            ->required()
+                            ->placeholder('admin@example.com' ),
                     ]),
 
                     Tab::make(__('Contraseña'), [

@@ -16,10 +16,10 @@ class CrnubeSpreedsheatConceptos extends Model{
 
     protected $table = 'crnube_spreadsheet_conceptos';
     final public const DEFAULT_ROLE_ID = 3;
-    protected $fillable = ['tipo_concepto','tipo_valor','motivo','valor','employee_id','observaciones'];
+    protected $fillable = [' name', 'type', 'value_type', 'value', 'note'];
 
     protected $attributes = [
-        'observaciones' => '',
+        'note' => '',
     ];
 
 

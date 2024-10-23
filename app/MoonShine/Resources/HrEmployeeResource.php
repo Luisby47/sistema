@@ -33,7 +33,7 @@ class HrEmployeeResource extends ModelResource
 {
     protected string $model = HrEmployee::class;
 
-    protected string $title = 'Colaboradores';
+    protected string $title = 'Empleados';
 
     public string $column = 'name';
 
@@ -67,10 +67,9 @@ class HrEmployeeResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
-                Text::make('Nombre Relacionado', 'name_related'),
-                Text::make('Identificacion', 'identification_id'),
+                Text::make('Nombre del Empleado', 'name_related'),
+                Text::make('Identificacion', 'identification_id')->mask('###-###-###-###'),
                 // Belong de address
-                Text::make('Direccion', 'address_id'),
                 Date::make('Fecha de creación', 'create_date')
                     ->format('d/m/Y')
                     ->default(now()->toDateTimeString())

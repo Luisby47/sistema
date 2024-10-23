@@ -6,7 +6,7 @@ use App\Http\Controllers\Company\CompanyController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('/login');
+    return redirect('/admin');
 });
 
 
@@ -22,7 +22,7 @@ if (config('moonshine.auth.enable', true)) {
         });
 }
 
-Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('change-company');
+Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('changeCompany');
 
 
 
