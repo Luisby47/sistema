@@ -8,9 +8,11 @@ namespace App\MoonShine\Resources;
 use App\Models\CrnubeSpreadsheetRole;
 use App\Models\HrDepartment;
 use App\Models\ResCompany;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\HrJob;
 
+use Illuminate\Support\Facades\Cache;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Textarea;
@@ -51,6 +53,11 @@ class HrJobResource extends ModelResource
     public function export(): ?ExportHandler
     {
         return null;
+    }
+    public function query(): Builder
+    {
+
+        return parent::query()->where('company_id',Cache::get('company') );
     }
 
     /**

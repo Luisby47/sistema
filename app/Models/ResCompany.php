@@ -20,9 +20,19 @@ class ResCompany extends Model
     protected $table = 'res_company';
     protected $primaryKey = 'id';
 
+
+
     protected $fillable = ['name'];
 
 
+
+    public static function find(mixed $company): ResCompany
+    {
+      //Obtener el nombre de la empresa con el id
+
+        return self::query()->find($company);
+
+    }
     // Una compañia tiene muchos departamentos
     public function departments(): HasMany
     {

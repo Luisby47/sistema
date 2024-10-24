@@ -58,19 +58,6 @@ final class MoonShineLayout implements MoonShineLayoutContract
         return LayoutBuilder::make([
             TopBar::make([
                 Menu::make()->top(),
-                /*
-                Dropdown::make(
-                    toggler: 'Click me',
-                )
-                    ->items([
-                        Link::make('#', 'Link 1'),
-                        Link::make('#', 'Link 2'),
-                        Link::make('#', 'Link 3'),
-                    ])
-                    ->searchable()
-                    ->searchPlaceholder('Search item')
-                */
-
 
 
             ]   )
@@ -79,9 +66,12 @@ final class MoonShineLayout implements MoonShineLayoutContract
                         static fn() => config('moonshine.auth.enable', true),
                         static fn() => [
 
-                            //Este select se puede usar para cambiar de compania en el sistema de planillas los cuales estan en la tabla res_company, estonces el usuario debe selecionar una opcion y se guardar esa opcion en la session del usuario  y se debe mostrar en el topbar
 
-                                FormBuilder::make()
+
+
+                            //Otra solucion es usar flex y select y action para eliminar los problemas alertas y con method en acction se pasa el parametro del id de empresa
+                            //https://moonshine-laravel.com/docs/resource/components/components-decoration_layout
+                            FormBuilder::make()
                                     ->action(route('changeCompany'))
                                     ->customAttributes(['class' => 'flex-col items-center  '])
                                     ->fields([

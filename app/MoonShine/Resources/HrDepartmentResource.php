@@ -65,6 +65,11 @@ class HrDepartmentResource extends ModelResource
 
 
 
+    public function query(): \Illuminate\Contracts\Database\Eloquent\Builder
+    {
+
+        return parent::query()->where('company_id',Cache::get('company') );
+    }
 
     /**
      * @return list<MoonShineComponent|Field>

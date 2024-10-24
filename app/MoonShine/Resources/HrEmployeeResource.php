@@ -11,6 +11,7 @@ use App\Models\ResCompany;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\HrEmployee;
 
+use Illuminate\Support\Facades\Cache;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Email;
 use MoonShine\Fields\Number;
@@ -24,6 +25,8 @@ use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Field;
 use MoonShine\Components\MoonShineComponent;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+
 
 
 /**
@@ -43,6 +46,9 @@ class HrEmployeeResource extends ModelResource
     protected string $sortDirection = 'ASC';
 
 
+    // Quiero hacer  query(): Builder donde se muestren los datos si el usuario es de la compañia almacena en cache como comapny
+
+
     public function getActiveActions(): array
     {
         return ['view'];
@@ -57,6 +63,13 @@ class HrEmployeeResource extends ModelResource
     public function export(): ?ExportHandler
     {
         return null;
+    }
+    public function query(): Builder
+    {
+        return parent::query()
+            ->join('hr_department', 'hr_employee.department_id', '=', 'hr_department.id')
+            ->select('hr_employee.*')
+            ->where('hr_department.company_id', Cache::get('company'));
     }
 
     /**

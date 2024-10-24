@@ -10,6 +10,7 @@ use App\Models\CrnubeSpreedsheatConceptos;
 
 
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
@@ -44,6 +45,31 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     {
         return ['create', 'view', 'update', 'delete', 'massDelete'];
     }
+
+
+    /**
+     * @throws ValidationException
+     */
+    public function beforeImportFilling(array $data): array
+    {
+        foreach ($data as $row) {
+            if (empty($row['name'])) {
+                throw ValidationException::withMessages(['name' => 'El campo nombre es obligatorio.']);
+            }
+            if (!in_array($row['type'], ['ING', 'DED'])) {
+                throw ValidationException::withMessages(['type' => 'El tipo debe ser ING o DED.']);
+            }
+            if (!in_array($row['value_type'], ['MONT', 'PORC'])) {
+                throw ValidationException::withMessages(['value_type' => 'El tipo de valor debe ser MONT o PORC.']);
+            }
+            if (!is_numeric($row['value'])) {
+                throw ValidationException::withMessages(['value' => 'El valor debe ser numérico.']);
+            }
+
+        }
+        return $data;
+    }
+
 
     /**
      * @return list<MoonShineComponent|Field>
