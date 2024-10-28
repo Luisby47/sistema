@@ -32,6 +32,17 @@
                 <p class="description">
                     Ingresa tu nueva contraseña.
                 </p>
+                <p class="description">
+                    <p class="description"> La contraseña debe seguir el siguiente formato:<p>
+                    <p class="description"> - Al menos 8 caracteres</p>
+                    <p class="description"> - Al menos una letra mayúscula</p>
+                    <p class="description"> - Al menos una letra minúscula</p>
+                    <p class="description"> - Al menos un número (0-9)</p>
+                    <p class="description"> - Al menos un caracter especial</p>
+
+
+
+                </p>
             </div>
 
             @csrf

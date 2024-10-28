@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CrnubeSpreadsheetJornada extends Model {
     use HasFactory;
@@ -14,4 +15,11 @@ class CrnubeSpreadsheetJornada extends Model {
     protected $primaryKey = 'id';
 
     protected $fillable = ['nombre', 'cant_dias'];
+
+
+    // Un departamento pertenece a una compañia
+    public function company() : BelongsTo
+    {
+        return $this->belongsTo(ResCompany::class, 'company_id', 'id');
+    }
 }

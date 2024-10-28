@@ -14,6 +14,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use MoonShine\Components\Alert;
+use MoonShine\Enums\PageType;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Relationships\HasOne;
@@ -36,7 +37,7 @@ use PHPUnit\Event\Telemetry\System;
 class HrDepartmentResource extends ModelResource
 {
     protected string $model = HrDepartment::class;
-
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Departamentos';
 
     public string $column = 'name';
@@ -83,7 +84,7 @@ class HrDepartmentResource extends ModelResource
 
 
                 // Relación con la compañia a la que pertenece el departamento
-                BelongsTo::make('Empresa', 'company', static fn (ResCompany $model) => $model->name, new ResCompanyResource()),
+                BelongsTo::make('Empresa', 'company', static fn (ResCompany $model) => $model->name, new ResCompanyResource())->badge('green'),
 
 
                 Date::make('Fecha de creación', 'create_date')

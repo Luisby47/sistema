@@ -17,13 +17,22 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('days');
+            $table->foreignId('company_id')
+                ->constrained('res_company')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->timestamps();
         });
 
         DB::table( 'crnube_spreadsheet_jornadas' )->insert([
-            ['id' => 1, 'name' => 'Semanal', 'days' => 31, 'created_at' => now(), 'updated_at' => now(),],
-            ['id' => 2, 'name' => 'Quincenal', 'days' => 15, 'created_at' => now(), 'updated_at' => now(),],
-            ['id' => 3, 'name' => 'Mensual', 'days' => 7, 'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 1, 'name' => 'Semanal', 'days' => 31, 'company_id' => 1 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 2, 'name' => 'Quincenal', 'days' => 15, 'company_id' => 1 , 'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 3, 'name' => 'Mensual', 'days' => 7, 'company_id' => 1 , 'created_at' => now(), 'updated_at' => now(),],
+
+            ['id' => 4, 'name' => 'Semanal', 'days' => 31, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 5, 'name' => 'Quincenal', 'days' => 15, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 6, 'name' => 'Mensual', 'days' => 7, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
+
         ]);
     }
 

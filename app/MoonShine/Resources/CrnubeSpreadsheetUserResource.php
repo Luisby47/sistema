@@ -12,6 +12,7 @@ use App\Models\CrnubeSpreadsheetUser;
 use MoonShine\Decorations\Heading;
 use MoonShine\Decorations\Tab;
 use MoonShine\Decorations\Tabs;
+use MoonShine\Enums\PageType;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\PasswordRepeat;
 use MoonShine\Fields\Relationships\BelongsTo;
@@ -44,7 +45,7 @@ class CrnubeSpreadsheetUserResource extends ModelResource
 
     protected string $title = 'Usuarios';
     // un array with con la tabla de crnuve_spreadsheet_roles
-
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected bool $createInModal = true;
     protected bool $editInModal = true;
 
@@ -130,7 +131,13 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                             ->customAttributes(['autocomplete' => 'Nueva Contraseña'])
                             ->hideOnIndex()
                             ->hideOnDetail()
-                            ->eye(),
+                            ->eye()
+                        ->hint('No debe incluir espacios en blanco.
+                                    Al menos un carácter especial (!, @, #, $, %, ^, &, *, etc).
+                                    Debe tener una longitud mínima de 8 caracteres.
+                                    Debe contener minúsculas.
+                                    Debe contener mayúsculas.
+                                    Debe contener números (0-9).'),
 
                         PasswordRepeat::make(__('Repetir Contraseña'), 'password_repeat')
                             ->customAttributes(['autocomplete' => 'Confirmar contraseña'])
@@ -177,7 +184,7 @@ class CrnubeSpreadsheetUserResource extends ModelResource
             'password' => [
                 $item->exists ? 'sometimes' : 'required',
                 'nullable',
-                'min:12',
+                'min:8',
                 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{12,}$/',
                 'required_with:password_repeat',
                 'same:password_repeat',

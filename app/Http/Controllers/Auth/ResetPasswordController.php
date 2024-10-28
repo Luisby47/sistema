@@ -46,11 +46,7 @@ class ResetPasswordController extends MoonShineController
     {
         $form =  ResetPassword::class;
 
-        // Verifica si el email es correcto
-        if ($request->get('email', '')) {
-            // Si es correcto, añadimos un mensaje de éxito
 
-        }
 
         return view('vendor.moonshine.auth.reset-password',
             [ 'form' => new $form(), 'token' => $token, 'email' => $request->get('email', ''  )]  );
@@ -63,7 +59,14 @@ class ResetPasswordController extends MoonShineController
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            //'password' => 'required|min:8|confirmed',
+            'password' => [
+                'required',
+                'min:8',
+                'regex:/[a-z]/',      // debe contener al menos una letra minúscula
+                'regex:/[A-Z]/',      // debe contener al menos una letra mayúscula
+                'regex:/[0-9]/',      // debe contener al menos un número
+                'regex:/[@$!%*?&]/',  // debe contener al menos un carácter especial
+                ]
         ]);
 
         $status = Password::reset(

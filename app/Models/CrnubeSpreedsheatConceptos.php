@@ -27,4 +27,12 @@ class CrnubeSpreedsheatConceptos extends Model{
     {
         return $this->belongsTo(HrEmployee::class);
     }
+
+
+
+    public function company() : BelongsTo
+    {
+        return $this->belongsTo(ResCompany::class, 'company_id', 'id');
+    }
+
 }

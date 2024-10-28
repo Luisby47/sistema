@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetJornada;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
+use MoonShine\Enums\PageType;
 use MoonShine\Exceptions\FieldException;
 use MoonShine\Fields\Number;
+use MoonShine\Fields\Select;
 use MoonShine\Handlers\ExportHandler;
 use MoonShine\Handlers\ImportHandler;
 use MoonShine\Resources\ModelResource;
@@ -27,7 +31,7 @@ use MoonShine\Components\MoonShineComponent;
 class CrnubeSpreadsheetJornadaResource extends ModelResource
 {
     protected string $model = CrnubeSpreadsheetJornada::class;
-
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected string $title = 'Jornadas laborales';
 
     protected bool $createInModal = true;
@@ -40,9 +44,14 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
      */
     public function getActiveActions(): array
     {
-        return ['view', 'update'];
+        return ['view', 'update', 'create'];
     }
 
+    public function query(): Builder
+    {
+
+        return parent::query()->where('company_id',Cache::get('company') );
+    }
     /**
      * @throws FieldException
      */
@@ -51,13 +60,19 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
         return [
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
-                Text::make('Nombre de Jornada Laboral','name')
-                ->sortable()->readonly(),
+                Select::make('Nombre de Jornada Laboral','name')
+                    ->options([
+                        'Semanal' => 'Semanal',
+                        'Quincenal' => 'Quincenal',
+                        'Mensual' => 'Mensual',
+                    ]),
                 Number::make('Cantidad de días','days')
                 ->required()
                 ->placeholder('0-31')
                 ->max(31)
-                ->min(0),
+                ->min(0)
+                ->step(1),
+                Number::make('Empresa','company_id')->hideOnAll()->default(Cache::get('company') ),
             ]),
         ];
     }
@@ -69,8 +84,15 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
      * @see https://laravel.com/docs/validation#available-validation-rules
      */
     public function rules(Model $item): array { return [
-        'name' => ['required', 'string', Rule::unique('crnube_spreadsheet_jornadas')->ignore($item->id)],
-
+        'name' => [
+            'required',
+            'string',
+            Rule::unique('crnube_spreadsheet_jornadas')
+                ->where(function ($query) use ($item) {
+                    return $query->where('company_id', $item->company_id ?? request()->input('company_id'));
+                })
+                ->ignore($item->id)
+        ],
     ]; }
 
     public function import(): ?ImportHandler

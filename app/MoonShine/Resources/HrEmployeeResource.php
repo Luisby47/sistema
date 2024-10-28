@@ -81,7 +81,7 @@ class HrEmployeeResource extends ModelResource
             Block::make([
                 ID::make()->sortable()->hideOnAll(),
                 Text::make('Nombre del Empleado', 'name_related'),
-                Text::make('Identificacion', 'identification_id')->mask('###-###-###-###'),
+                Text::make('Identificacion', 'identification_id')->mask('9-9999-9999'),
                 // Belong de address
                 Date::make('Fecha de creación', 'create_date')
                     ->format('d/m/Y')
@@ -91,10 +91,10 @@ class HrEmployeeResource extends ModelResource
 
                 //Relacion con la compañia
                 BelongsTo::make('Departamento', 'department',
-                    static fn (HrDepartment $model) => $model->name, new HrDepartmentResource()),
+                    static fn (HrDepartment $model) => $model->name, new HrDepartmentResource())->badge('green'),
                 //Relacion con el puesto
                 BelongsTo::make('Puesto de Trabajo', 'job',
-                    static fn (HrJob $model) => $model->name, new HrJobResource()),
+                    static fn (HrJob $model) => $model->name, new HrJobResource())->badge('green'),
 
                 Number::make('Telefono de trabajo', 'work_phone'),
                 Number::make('Telefono movil', 'mobile_phone'),

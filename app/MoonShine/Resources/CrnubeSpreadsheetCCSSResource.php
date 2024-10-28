@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\MoonShine\Resources;
 
+use ForestLynx\MoonShine\Fields\Decimal;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetCCSS;
 
+use MoonShine\Enums\PageType;
 use MoonShine\Exceptions\FieldException;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Text;
@@ -24,7 +26,7 @@ use MoonShine\Components\MoonShineComponent;
 class CrnubeSpreadsheetCCSSResource extends ModelResource
 {
     protected string $model = CrnubeSpreadsheetCCSS::class;
-
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected bool $editInModal = true;
     protected bool $detailInModal = true;
     protected string $sortDirection = 'ASC';

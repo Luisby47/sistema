@@ -5,24 +5,33 @@ declare(strict_types=1);
 namespace App\MoonShine\Resources;
 
 use App\Models\HrEmployee;
+use App\Models\ResCompany;
+use Exception;
+use ForestLynx\MoonShine\Fields\Decimal;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreedsheatConceptos;
 
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use MoonShine\Enums\PageType;
+use MoonShine\Exceptions\FieldException;
+use MoonShine\Fields\Hidden;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
 
+use MoonShine\MoonShineUI;
 use MoonShine\Resources\ModelResource;
 use MoonShine\Decorations\Block;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Field;
 use MoonShine\Components\MoonShineComponent;
 use MoonShine\Fields\Select;
-
+use Illuminate\Contracts\Database\Eloquent\Builder;
 /**
  * @extends ModelResource<CrnubeSpreedsheatConceptos>
  */
@@ -31,13 +40,13 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     protected string $model = CrnubeSpreedsheatConceptos::class;
 
     protected string $title = 'Conceptos Salariales';
-
+    protected ?PageType $redirectAfterSave = PageType::INDEX;
     protected bool $createInModal = true;
     protected bool $editInModal = true;
     protected bool $detailInModal = true;
 
 
-    protected array $with = ['employee'];
+    protected array $with = ['company'];
 
     protected bool $import = true;
 
@@ -47,39 +56,42 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     }
 
 
+    public function query(): Builder
+    {
+
+        return parent::query()->where('company_id', Cache::get('company') );
+    }
+
+
     /**
      * @throws ValidationException
+     * @throws Exception
      */
     public function beforeImportFilling(array $data): array
     {
-        foreach ($data as $row) {
-            if (empty($row['name'])) {
-                throw ValidationException::withMessages(['name' => 'El campo nombre es obligatorio.']);
-            }
-            if (!in_array($row['type'], ['ING', 'DED'])) {
-                throw ValidationException::withMessages(['type' => 'El tipo debe ser ING o DED.']);
-            }
-            if (!in_array($row['value_type'], ['MONT', 'PORC'])) {
-                throw ValidationException::withMessages(['value_type' => 'El tipo de valor debe ser MONT o PORC.']);
-            }
-            if (!is_numeric($row['value'])) {
-                throw ValidationException::withMessages(['value' => 'El valor debe ser numérico.']);
-            }
 
-        }
+
         return $data;
+    }
+
+    public function afterImported(Model $item): Model
+    {
+
+        return $item;
     }
 
 
     /**
      * @return list<MoonShineComponent|Field>
+     * @throws FieldException
+     * @throws \JsonException
      */
     public function fields(): array
     {
         return [
             Block::make([
                 ID::make()->sortable(),
-                Text::make('Motivo','name')
+                Text::make('Motivo de Concepto Salarial','name')
                 ->required()
                 ->showOnExport()
                     ->placeholder('Ejemplo: Aguinaldo')
@@ -104,19 +116,41 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 ->sortable()
                 ->searchable()
                 ->useOnImport(),
+
                 Number::make('Valor','value')
                 ->required()
                 ->showOnExport()
                 ->sortable()
                 ->step(0.01)
                     ->placeholder('0.00 - 100.00')
-
                 ->useOnImport(),
+
+
+
+
+                /*
+                BelongsTo::make('Empresa', 'company',  static fn (ResCompany $model) => $model->name, new ResCompanyResource())
+                    ->default(Cache::get('company'))
+                    ->hideOnAll()
+                    ->showOnExport()
+                    ->useOnImport(),
+                */
+                Text::make('Empresa','company_id')
+                    ->default(Cache::get('company'))
+                    ->readonly()
+                    ->locked()
+                    ->showOnExport()
+                    ->useOnImport(),
+
 
                 Textarea::make('Observaciones','note')
                 ->default("")
                 ->showOnExport()
-                ->useOnImport()
+                ->useOnImport(),
+
+
+
+
             ]),
         ];
     }
