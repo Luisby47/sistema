@@ -45,6 +45,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     protected bool $editInModal = true;
     protected bool $detailInModal = true;
 
+    protected bool $errorsAbove = false;
 
     protected array $with = ['company'];
 
@@ -71,7 +72,35 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     {
 
 
-        return $data;
+        try {
+            // Omitir la primera línea (títulos en español)
+            $data = array_slice($data, 1);
+            // Definir las reglas de validación
+            $rules = [
+                'name' => 'required|string|unique:crnube_spreadsheet_conceptos,name',
+                'type' => 'required|in:ING,DED',
+                'value_type' => 'required|in:MONT,PORC',
+                'value' => 'required|numeric',
+                'company_id' => 'required|exists:res_company,id',
+                'note' => 'nullable|string',
+            ];
+
+            // Validar los datos
+            $validator = Validator::make($data, $rules);
+
+            // Si la validación falla, lanzar una excepción
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            return $data;
+        } catch (ValidationException|Exception $e) {
+            // Enviar un toast con el mensaje de error
+            MoonShineUI::toast('Error al cargar los datos, corriga el excel', 'error');
+
+            // Puedes lanzar una excepción o manejar el error de otra manera
+            throw $e;
+        }
     }
 
     public function afterImported(Model $item): Model
@@ -173,8 +202,13 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                 if($tipoValor === 'MONT' && $value != intval($value)) {
                     $fail('El valor debe ser un numero entero');
                 }
-                if ($tipoValor === 'PORC' && $value == intval($value)) {
-                    $fail('Debe incluir los decimales del valor');
+                if ($tipoValor === 'PORC') {
+                    if ($value == intval($value)) {
+                        $fail('Debe incluir los decimales del valor');
+                    }
+                    if ($value < 0.00 || $value > 100.00) {  // beforeSave
+                        $fail('El valor debe estar entre 0.00 y 100.00');
+                    }
                 }
             }],
             'note' => [''],
@@ -189,11 +223,5 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     }
 
 
-    /*
-    public function import(): ?ImportHandler
-    {
-        return ImportHandler::make('Importar ingresos y deducciones')
-            ->deleteAfter();
-    }
-    */
+
 }

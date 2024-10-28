@@ -140,7 +140,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             ->tableRow('#143e5c')
             ->dividers('#09304d')
             ->borders('#061b2a')
-            ->buttons('#061b2a')
+
             ->secondary('#D9D9D9', dark: true)
             ->primary('#09304d', dark: true)
             ->primary('#061b2a')

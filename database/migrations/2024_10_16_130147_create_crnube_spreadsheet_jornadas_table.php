@@ -25,13 +25,13 @@ return new class extends Migration
         });
 
         DB::table( 'crnube_spreadsheet_jornadas' )->insert([
-            ['id' => 1, 'name' => 'Semanal', 'days' => 31, 'company_id' => 1 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 1, 'name' => 'Semanal', 'days' => 7, 'company_id' => 1 ,'created_at' => now(), 'updated_at' => now(),],
             ['id' => 2, 'name' => 'Quincenal', 'days' => 15, 'company_id' => 1 , 'created_at' => now(), 'updated_at' => now(),],
-            ['id' => 3, 'name' => 'Mensual', 'days' => 7, 'company_id' => 1 , 'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 3, 'name' => 'Mensual', 'days' => 31, 'company_id' => 1 , 'created_at' => now(), 'updated_at' => now(),],
 
-            ['id' => 4, 'name' => 'Semanal', 'days' => 31, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 4, 'name' => 'Semanal', 'days' => 7, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
             ['id' => 5, 'name' => 'Quincenal', 'days' => 15, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
-            ['id' => 6, 'name' => 'Mensual', 'days' => 7, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
+            ['id' => 6, 'name' => 'Mensual', 'days' => 31, 'company_id' => 2 ,'created_at' => now(), 'updated_at' => now(),],
 
         ]);
     }

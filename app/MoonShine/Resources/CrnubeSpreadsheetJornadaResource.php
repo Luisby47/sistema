@@ -93,6 +93,21 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
                 })
                 ->ignore($item->id)
         ],
+        'days' => [
+            'required',
+            'integer',
+            'min:0',
+            function ($attribute, $value, $fail) {
+                $name = request()->input('name');
+                if ($name === 'Semanal' && $value > 7) {
+                    $fail('Para jornadas semanales, los días no pueden ser más de 7.');
+                } elseif ($name === 'Quincenal' && $value > 15) {
+                    $fail('Para jornadas quincenales, los días no pueden ser más de 15.');
+                } elseif ($name === 'Mensual' && $value > 31) {
+                    $fail('Para jornadas mensuales, los días no pueden ser más de 31.');
+                }
+            }
+        ],
     ]; }
 
     public function import(): ?ImportHandler

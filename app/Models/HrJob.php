@@ -33,7 +33,7 @@ class HrJob extends Model
     // Un puesto pertenece a un departamento
     public function department() : BelongsTo
     {
-        return $this->belongsTo(HrDepartment::class, 'company_id', 'id');
+        return $this->belongsTo(HrDepartment::class, 'department_id', 'id');
     }
 
 
