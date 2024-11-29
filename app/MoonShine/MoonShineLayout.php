@@ -29,6 +29,7 @@ use MoonShine\Components\When;
 use MoonShine\Contracts\MoonShineLayoutContract;
 
 use MoonShine\Decorations\Block;
+use MoonShine\Decorations\Flex;
 use MoonShine\Fields\Select;
 use MoonShine\Fields\Text;
 use MoonShine\MoonShineRequest;
@@ -39,20 +40,9 @@ use MoonShine\MoonShineUI;
 final class MoonShineLayout implements MoonShineLayoutContract
 {
 
-    public function changeCompany(MoonShineRequest $request): RedirectResponse
-    {
-
-        Cache()->put('company', $request->input('company'));
-        MoonShineUI::toast('Se cambio la empresa con existo', 'success');
-
-        return back();
-    }
-
-
 
     public static function build(): LayoutBuilder
     {
-
 
 
         return LayoutBuilder::make([
@@ -71,6 +61,8 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
                             //Otra solucion es usar flex y select y action para eliminar los problemas alertas y con method en acction se pasa el parametro del id de empresa
                             //https://moonshine-laravel.com/docs/resource/components/components-decoration_layout
+
+
                             FormBuilder::make()
                                     ->action(route('changeCompany'))
                                     ->customAttributes(['class' => 'flex-col items-center  '])
@@ -79,16 +71,11 @@ final class MoonShineLayout implements MoonShineLayoutContract
                                             ->options(ResCompany::query()->pluck('name', 'id')->toArray())
                                             ->default(Cache::get('company'))
                                             ->native()
-                                            ->customAttributes(['style' => 'border: 3px solid white !important;', 'class' => 'w-32 h-px rounded-md text-xs'])
+                                            ->customAttributes(['style' => 'border: 2px solid white !important;', 'class' => 'w-32   h-px rounded-md text-xs']),
 
                                     ])
-                                    ->submit('Cambiar Empresa', ['class' => 'h-px  bg-blue-500 text-black rounded-md text-xs flex items-center']),
-
-
-
-
-
-
+                                    ->errorsAbove(false)
+                                    ->submit('Cambiar Empresa', ['class' => 'w-32 border: 3px h-px  bg-blue-500 text-black rounded-md text-xs flex items-center']),
                              Profile::make() ],
 
                     )
@@ -101,6 +88,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
 
 
                 ]),
+
 
                 Content::make(),
                 Footer::make()
@@ -117,6 +105,7 @@ final class MoonShineLayout implements MoonShineLayoutContract
             ])->customAttributes(['class' => 'layout-page']),
 
             //Cambiar el tipo de body class a layout-page
+            Div::make([view('vendor.moonshine.components.modal_loading')]), // Correcta inclusión del modal
         ])->bodyClass('theme-minimalistic');
     }
 

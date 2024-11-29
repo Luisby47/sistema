@@ -18,6 +18,8 @@ class ResUser extends Model
 
     protected $guarded = ['*'];
 
+
+
     public function crnubeSpreadsheetUser(): HasOne
     {
         return $this->hasOne(CrnubeSpreadsheetUser::class,'id', 'id');

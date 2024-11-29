@@ -4,7 +4,8 @@
         @include('moonshine::layouts.shared.head')
         @moonShineAssets
     </head>
-    <body class="antialiased">
-        @yield('content')
+    <body class="antialiased ">
+    <x-moonshine::modal_loading/>
+    @yield('content')
     </body>
 </html>

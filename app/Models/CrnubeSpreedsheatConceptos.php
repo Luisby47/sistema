@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Cache;
 use MoonShine\ChangeLog\Traits\HasChangeLog;
 
 /**
@@ -28,7 +29,16 @@ class CrnubeSpreedsheatConceptos extends Model{
         return $this->belongsTo(HrEmployee::class);
     }
 
+    protected static function boot(): void
+    {
+        parent::boot();
 
+        static::creating(function ($model) {
+            if (is_null($model->company_id)) {
+                $model->company_id = Cache::get('company');
+            }
+        });
+    }
 
     public function company() : BelongsTo
     {

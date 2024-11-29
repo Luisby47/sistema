@@ -132,7 +132,7 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                             ->hideOnIndex()
                             ->hideOnDetail()
                             ->eye()
-                        ->hint('No debe incluir espacios en blanco.
+                        ->hint('No debe incluir espacios en blanco .
                                     Al menos un carácter especial (!, @, #, $, %, ^, &, *, etc).
                                     Debe tener una longitud mínima de 8 caracteres.
                                     Debe contener minúsculas.
@@ -181,13 +181,11 @@ class CrnubeSpreadsheetUserResource extends ModelResource
                 : 'required|min:6|required_with:password_repeat|same:password_repeat',
             'name' => 'required',
             */
-            'password' => [
-                $item->exists ? 'sometimes' : 'required',
-                'nullable',
-                'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{12,}$/',
-                'required_with:password_repeat',
-                'same:password_repeat',
+            'password' => ['nullable','required_with:password_repeat','same:password_repeat', \Illuminate\Validation\Rules\Password::min(8)
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols(),
             ],
 
         ];

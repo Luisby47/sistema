@@ -129,6 +129,13 @@ return [
     'url' => 'El campo :attribute debe ser una URL válida.',
     'uuid' => 'El campo :attribute debe ser un UUID válido.',
 
+
+
+    'password.mixed' => 'El campo :attribute debe contener al menos un número y una letra.',
+    'password.symbols' => 'El campo :attribute debe contener al menos un carácter especial .',
+    'password.letters' => 'El campo :attribute debe contener al menos una letra.',
+    'password.numbers' => 'El campo :attribute debe contener al menos un número.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -142,7 +149,6 @@ return [
 
     'custom' => [
         'attribute-name' => [
-            'rule-name' => 'custom-message',
         ],
     ],
 
@@ -158,6 +164,16 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'password' => 'contraseña',
+        'password_repeat' => 'repetir contraseña',
+        'name' => 'nombre',
+        'type' => 'tipo',
+        'value_type' => 'tipo de valor',
+        'value' => 'valor',
+        'company_id' => 'empresa',
+        'note' => 'observaciones',
+
+    ],
 
 ];

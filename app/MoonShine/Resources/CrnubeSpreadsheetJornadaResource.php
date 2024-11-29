@@ -44,7 +44,7 @@ class CrnubeSpreadsheetJornadaResource extends ModelResource
      */
     public function getActiveActions(): array
     {
-        return ['view', 'update', 'create'];
+        return ['view', 'update'];
     }
 
     public function query(): Builder

@@ -1,33 +1,24 @@
 <?php
 
 use App\Http\Controllers\Auth\CrnubeAuthController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Company\CompanyController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return redirect('/admin');
-});
+
 
 
 //Route::get('/login', 'App\Http\Controllers\Auth\CrnubeAuthController@login')->name('login');
 
 // Enable authentication routes if enabled in the configuration
-if (config('moonshine.auth.enable', true)) {
-    Route::controller(CrnubeAuthController::class)
-        ->group(static function (): void {
-            Route::get('/login', 'login')->name('login');
-            Route::post('/authenticate', 'authenticate')->name('authenticate');
-            Route::get('/logout', 'logout')->name('logout');
-        });
-}
+
+Route::get('/', function () {
+    return redirect(moonshineRouter()->home());
+});
 
 Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('changeCompany');
 
-
-
-
-#Auth Passwords
 if (config('moonshine.auth.enable', true)) {
     Route::controller(ResetPasswordController::class)
         ->group(static function (): void {
@@ -39,10 +30,24 @@ if (config('moonshine.auth.enable', true)) {
 
             Route::post('/reset-password', 'recoverUpdate')
                 ->name('password.reset.update');
-
-
         });
 }
+
+
+Route::group(moonshine()->configureRoutes(), static function (): void {
+    Route::middleware(config('moonshine.auth.middleware', []))->group(function (): void {
+        if (config('moonshine.auth.enable', true)) {
+            Route::post('/profile', [ProfileController::class, 'store'])
+                ->middleware(config('moonshine.auth.middleware', []))
+                ->name('profile.store');
+        }
+    });});
+# Company Routes to change company
+
+
+
+#Auth Passwords
+
 
 
 

@@ -8,6 +8,7 @@ use ForestLynx\MoonShine\Fields\Decimal;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\CrnubeSpreadsheetCCSS;
 
+use MoonShine\Components\Spinner;
 use MoonShine\Enums\PageType;
 use MoonShine\Exceptions\FieldException;
 use MoonShine\Fields\Number;
@@ -66,6 +67,7 @@ class CrnubeSpreadsheetCCSSResource extends ModelResource
                     ->min(0.00)
                     ->max(100.00)
                     ->expansion('%'),
+
             ]),
         ];
     }

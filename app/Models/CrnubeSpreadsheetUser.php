@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo; //Importante esto para BelongsTo
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 use MoonShine\Traits\Models\HasMoonShineSocialite;
 use Illuminate\Auth\Passwords\CanResetPassword;
 
@@ -37,6 +39,8 @@ class CrnubeSpreadsheetUser extends Authenticatable
     protected $hidden = [
         'password', 'remember_token', // Espacio Ocultos
     ];
+
+
 
 
 

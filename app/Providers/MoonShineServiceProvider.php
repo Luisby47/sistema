@@ -15,6 +15,7 @@ use App\MoonShine\Resources\HrDepartmentResource;
 use App\MoonShine\Resources\HrEmployeeResource;
 use App\MoonShine\Resources\HrJobResource;
 use App\MoonShine\Resources\ResCompanyResource;
+use Illuminate\Validation\Rules\Password;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
 use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
@@ -24,6 +25,7 @@ use MoonShine\Contracts\Resources\ResourceContract;
 use MoonShine\Menu\MenuElement;
 use App\MoonShine\Pages\Page;
 use Closure;
+use MoonShine\Resources\ModelResource;
 use MoonShine\Resources\MoonShineUserResource;
 use MoonShine\Resources\MoonShineUserRoleResource;
 
@@ -35,6 +37,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     protected function resources(): array
     {
         return [
+
         ];
     }
 
@@ -123,15 +126,18 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     }
     public function boot(): void
     {
+
         session()->put('locale', 'es');
         app()->setLocale(session()->get('locale'));
 
         parent::boot();
 
         moonShineAssets()->add([
-            asset('vendor/moonshine/assets/custom.css')
+            asset('vendor/moonshine/assets/custom.css'),
+            asset('vendor/moonshine/assets/custom.js')
 
         ]);
+
 
 
         moonshineColors()
@@ -147,5 +153,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             ->secondary('#061b2a');
 
     }
+
+
 
 }

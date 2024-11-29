@@ -17,7 +17,7 @@ use MoonShine\Fields\Image;
 use MoonShine\Fields\Password;
 use MoonShine\Fields\PasswordRepeat;
 use MoonShine\Fields\Text;
-use MoonShine\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\ProfileController;
 use MoonShine\MoonShineAuth;
 use MoonShine\Pages\Page;
 use MoonShine\TypeCasts\ModelCast;
@@ -27,12 +27,13 @@ class ProfilePage extends Page
     /**
      * @return array<string, string>
      */
-
+    protected bool $errorsAbove = false;
 
     public function breadcrumbs(): array
     {
         return [
             '#' => $this->title(),
+
         ];
     }
 
@@ -76,7 +77,8 @@ class ProfilePage extends Page
                     Tab::make(trans('moonshine::ui.resource.password'), [
                         Heading::make(__('moonshine::ui.resource.change_password')),
 
-                        Password::make(trans('moonshine::ui.resource.password'), 'password')
+                        Password::make(__('Contraseña'), 'password')
+
                             ->customAttributes(['autocomplete' => 'new-password'])
                             ->eye()   ->hint('No debe incluir espacios en blanco.
                                     Al menos un carácter especial (!, @, #, $, %, ^, &, *, etc).
@@ -85,7 +87,8 @@ class ProfilePage extends Page
                                     Debe contener mayúsculas.
                                     Debe contener números (0-9).'),
 
-                        PasswordRepeat::make(trans('moonshine::ui.resource.repeat_password'), 'password_repeat')
+
+                        PasswordRepeat::make(__('Repetir Contraseña'), 'password_repeat')
                             ->customAttributes(['autocomplete' => 'confirm-password'])
                             ->eye(),
                     ]),
@@ -120,41 +123,4 @@ class ProfilePage extends Page
      */
 
 
-    // Esta función se encarga de validar los campos de la tabla al momento de crear o actualizar un registro
-    public function rules(Model $item): array
-    {
-        return [
-            'id' => [
-                'required',
-                'exists:res_users,id',
-                Rule::unique('crnube_spreadsheet_users', 'id')->ignore($item->id),
-            ],
-            'role_id' => 'required|exists:crnube_spreadsheet_roles,id',
-            // Si el email ya existe, no es necesario que se ingrese uno nuevo (excepto si se está actualizando el registro) y debe ser un email válido y único y no puede ser nulo
-            'email' => [
-                'sometimes',
-                'bail',
-                'required',
-                'email',
-                Rule::unique('crnube_spreadsheet_users', 'email')->ignore($item),
-            ],
-
-            // Si la contraseña ya existe, no es necesario que se ingrese una nueva y debe tener al menos 6 caracteres y ser igual a la contraseña repetida
-            /*
-            'password' => $item->exists
-                ? 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat'
-                : 'required|min:6|required_with:password_repeat|same:password_repeat',
-            'name' => 'required',
-            */
-            'password' => [
-                $item->exists ? 'sometimes' : 'required',
-                'nullable',
-                'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[^\s]{12,}$/',
-                'required_with:password_repeat',
-                'same:password_repeat',
-            ],
-
-        ];
-    }
 }

@@ -2,20 +2,41 @@
 namespace App\Http\Controllers\Auth;
 use App\Form\EmailForm;
 
+use App\Form\LoginForm;
 use App\Form\ResetPassword;
 use App\Models\CrnubeSpreadsheetUser;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Password;
+
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+
 use MoonShine\Components\Layout\Flash;
 use MoonShine\Http\Controllers\MoonShineController;
 
 class ResetPasswordController extends MoonShineController
 {
 
+    public function login() : View|RedirectResponse
+    {
+        // If the user is already authenticated, redirect to the Dashboard page
+        if ($this->auth()->check()) {
+            return redirect(
+            //Home page is the dashboard
+                moonshineRouter()->home()
+            );
+        }
+
+        // Get the login form (made by me)
+        $form = config('forms.login', LoginForm::class);
+
+        // Return the login view (custom) with the form
+        return view('vendor.moonshine.auth.login', [
+            'form' => new $form(),
+        ]);
+    }
     public function index() : View|RedirectResponse
     {
 
@@ -59,14 +80,15 @@ class ResetPasswordController extends MoonShineController
         $request->validate([
             'token' => 'required',
             'email' => 'required|email',
-            'password' => [
-                'required',
-                'min:8',
-                'regex:/[a-z]/',      // debe contener al menos una letra minúscula
-                'regex:/[A-Z]/',      // debe contener al menos una letra mayúscula
-                'regex:/[0-9]/',      // debe contener al menos un número
-                'regex:/[@$!%*?&]/',  // debe contener al menos un carácter especial
-                ]
+            //'contraseña' => 'sometimes|nullable|min:6|required_with:password_repeat|same:password_repeat' ,
+
+            'password' => ['required_with:password_repeat','same:password_repeat', \Illuminate\Validation\Rules\Password::min(8)
+                ->mixedCase()
+                ->letters()
+                ->numbers()
+                ->symbols(),
+            ],
+
         ]);
 
         $status = Password::reset(
@@ -83,7 +105,7 @@ class ResetPasswordController extends MoonShineController
         );
 
         return $status === Password::PASSWORD_RESET
-            ? redirect()->route('moonshine.index')->with('status', __($status))
+            ? redirect(moonshineRouter()->to('login'))->with('status', __($status))
             : back()->withErrors(['email' => [__($status)]]);
     }
 }
