@@ -9,7 +9,7 @@ use Generator;
 use Illuminate\Support\Facades\Storage;
 use MoonShine\Contracts\Resources\ResourceContract;
 use MoonShine\Exceptions\ActionException;
-use MoonShine\Handlers\Handler;
+use MoonShine\Handlers\ExportHandler;
 use MoonShine\Jobs\ExportHandlerJob;
 use MoonShine\MoonShineUI;
 use MoonShine\Notifications\MoonShineNotification;
@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 
-class ExportHandler extends Handler
+class CustomExportHandler extends ExportHandler
 {
     use WithStorage;
 
@@ -201,6 +201,8 @@ class ExportHandler extends Handler
             }
         };
 
+
+        // Default Excel Export
         $fastExcel = new FastExcel($items($resource));
 
         if (str($path)->contains('.csv')) {
@@ -209,6 +211,33 @@ class ExportHandler extends Handler
 
         $result = $fastExcel->export($path);
 
+
+        // Nuevo Excel Export
+        /*
+         $spreadsheet = new Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    $rowIndex = 1;
+    foreach ($items($resource) as $row) {
+        $colIndex = 1;
+        foreach ($row as $key => $value) {
+            $cell = $sheet->getCellByColumnAndRow($colIndex, $rowIndex);
+            $cell->setValue($value);
+
+            if ($key === 'name') {
+                $cell->getStyle()->getFill()->setFillType(Fill::FILL_SOLID);
+                $cell->getStyle()->getFill()->getStartColor()->setARGB(Color::COLOR_LIGHTBLUE);
+            }
+
+            $colIndex++;
+        }
+        $rowIndex++;
+    }
+
+    $writer = new Xlsx($spreadsheet);
+    $writer->save($path);
+
+         */
         $url = str($path)
             ->remove(Storage::disk($disk)->path($dir))
             ->value();

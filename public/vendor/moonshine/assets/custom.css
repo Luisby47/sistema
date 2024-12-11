@@ -1,4 +1,4 @@
-@import 'tailwindcss/base';
+
 @media (min-width: 1024px){body.theme-minimalistic .layout-menu-horizontal{}}body.theme-minimalistic .layout-menu-horizontal .menu-logo img{height:7.50rem}
 @media (min-width: 1024px){body.theme-minimalistic .layout-menu-horizontal .menu-logo img{height:7.50rem} .lo}
 
@@ -10,12 +10,16 @@
      height: 8rem;
  }
 
- /*
-padding-top: 1rem;
-padding-bottom: 1rem;
+.toast-item {
+    position: relative;
+    padding-bottom: 5px; /* Adjust as needed */
+}
 
-
-
-.layout-menu-horizontal .menu-actions
-
-  */
+.progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px; /* Adjust as needed */
+    background-color: #4caf50; /* Adjust as needed */
+    transition: width 1s linear;
+}

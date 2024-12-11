@@ -6,6 +6,7 @@ namespace App\Providers;
 
 use App\Models\CrnubeSpreadsheetRole;
 use App\Models\CrnubeSpreedsheatConceptos;
+use App\MoonShine\Handlers\CustomImportHandler;
 use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetJornadaResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetTaxResource;
@@ -16,6 +17,7 @@ use App\MoonShine\Resources\HrEmployeeResource;
 use App\MoonShine\Resources\HrJobResource;
 use App\MoonShine\Resources\ResCompanyResource;
 use Illuminate\Validation\Rules\Password;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
 use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
@@ -31,6 +33,7 @@ use MoonShine\Resources\MoonShineUserRoleResource;
 
 class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 {
+
     /**
      * @return list<ResourceContract>
      */
@@ -122,7 +125,11 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
      */
     protected function theme(): array
     {
-        return [];
+        return [
+
+
+
+        ];
     }
     public function boot(): void
     {
@@ -132,9 +139,12 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 
         parent::boot();
 
+
+
         moonShineAssets()->add([
             asset('vendor/moonshine/assets/custom.css'),
-            asset('vendor/moonshine/assets/custom.js')
+            asset('vendor/moonshine/assets/custom.js'),
+            asset('vendor/moonshine/assets/app_v2.js'),
 
         ]);
 
@@ -144,7 +154,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             ->background('#09304d')
             ->content('#061b2a')
             ->tableRow('#143e5c')
-            ->dividers('#09304d')
+            ->dividers('#FF0000')
             ->borders('#061b2a')
 
             ->secondary('#D9D9D9', dark: true)

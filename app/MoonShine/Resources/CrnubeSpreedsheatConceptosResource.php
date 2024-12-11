@@ -7,6 +7,7 @@ namespace App\MoonShine\Resources;
 use App\Models\HrEmployee;
 use App\Models\ResCompany;
 
+use App\MoonShine\Handlers\CustomImportHandler;
 use Exception;
 use ForestLynx\MoonShine\Fields\Decimal;
 use Illuminate\Database\Eloquent\Model;
@@ -61,9 +62,9 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
        }
        */
 
-    public function import(): ImportHandler
+    public function import(): ?ImportHandler
     {
-        return new ImportHandler('Importar') ;
+        return CustomImportHandler::make("Importar");
     }
     public function getActiveActions(): array
     {
@@ -80,7 +81,6 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 
     /**
      * @throws ValidationException
-     * @throws Exception
      */
     public function beforeImportFilling(array $data): array
     {

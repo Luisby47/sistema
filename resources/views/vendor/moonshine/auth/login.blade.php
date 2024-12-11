@@ -41,6 +41,8 @@
                     <p class="description">
                         @lang('moonshine::ui.login.description')
                     </p>
+
+
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}

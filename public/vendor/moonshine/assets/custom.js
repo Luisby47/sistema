@@ -1,37 +1,7 @@
 /* Modal */
 
-/*
-function modal_loading(isOpen, asyncUrl, autoClose) {
-    return {
-        open: isOpen === 'true',
-        asyncUrl: asyncUrl,
-        autoClose: autoClose === 'true',
-
-        dismissModal() {
-            if (this.autoClose) {
-                this.open = false;
-            }
-        },
-    };
-}
-
-
-
 function modal_loading() {
-    return {
-        open: true, // Modal abierto por defecto
 
-        // Lógica para cerrar el modal una vez la página ha cargado
-        init() {
-            // Cerrar el modal cuando la página esté completamente cargada
-            window.addEventListener('DOMContentLoaded', () => {
-                this.open = false; // Cerrar el modal
-            });
-        }
-    };
-}
- */
-function modal_loading() {
     return {
         open: false, // Modal está cerrado inicialmente
 
@@ -41,6 +11,7 @@ function modal_loading() {
         },
 
         handleNavigation() {
+            // Interceptar clics en enlaces que están dentro de una lista <li>
             // Interceptar clics en enlaces que están dentro de una lista <li>
             document.querySelectorAll('li a').forEach((link) => {
                 link.addEventListener('click', (e) => {

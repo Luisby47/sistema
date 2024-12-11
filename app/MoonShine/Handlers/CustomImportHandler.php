@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\MoonShine\Handlers;
 
 
-
 use Closure;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use MoonShine\Contracts\Fields\HasDefaultValue;
@@ -14,6 +14,7 @@ use MoonShine\Contracts\Resources\ResourceContract;
 use MoonShine\Exceptions\ActionException;
 use MoonShine\Fields\Field;
 use MoonShine\Handlers\Handler;
+use MoonShine\Handlers\ImportHandler;
 use MoonShine\Jobs\ImportHandlerJob;
 use MoonShine\MoonShineUI;
 use MoonShine\Notifications\MoonShineNotification;
@@ -25,18 +26,17 @@ use OpenSpout\Reader\Exception\ReaderNotOpenedException;
 use Rap2hpoutre\FastExcel\FastExcel;
 use Symfony\Component\HttpFoundation\Response;
 
-class ImportHandler extends Handler
+class CustomImportHandler extends ImportHandler
 {
     use WithStorage;
 
-    //protected string $view = 'moonshine::actions.import';
+    protected string $view = 'moonshine::actions.import';
 
     public string $inputName = 'import_file';
 
     protected ?string $icon = 'heroicons.outline.paper-clip';
 
     protected bool $deleteAfter = false;
-
     protected string $csvDelimiter = ',';
 
     protected array|Closure $notifyUsers = [];
@@ -130,16 +130,6 @@ class ImportHandler extends Handler
             return back();
         }
 
-        /*
-        self::process(
-            $path,
-            $this->getResource(),
-            $this->deleteAfter,
-            $this->getDelimiter(),
-            $this->getNotifyUsers()
-        );
-        */
-
         $importedCount = self::process(
             $path,
             $this->getResource(),
@@ -148,11 +138,8 @@ class ImportHandler extends Handler
             $this->getNotifyUsers()
         )->count();
 
-
-        MoonShineUI::toast(
-            __('moonshine::ui.resource.import.imported') . " ({$importedCount} items)",
-            'success'
-        );
+        $message = __('moonshine::ui.resource.import.imported') . " ({$importedCount} " . ($importedCount === 1 ? 'concepto salarial' : 'conceptos salariales') . ")";
+        MoonShineUI::toast($message, 'success');
 
         return back();
     }
@@ -226,7 +213,11 @@ class ImportHandler extends Handler
                 return false;
             }
 
-            $data = $resource->beforeImportFilling($data);
+
+
+                $data = $resource->beforeImportFilling($data);
+
+
 
             $item->forceFill($data);
 
