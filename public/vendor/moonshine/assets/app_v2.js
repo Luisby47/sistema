@@ -35,4 +35,16 @@ if (window.Alpine) {
     if (toastContainer) {
         Alpine.initTree(toastContainer);
     }
+
+    document.addEventListener("moonshine:init", () => {
+        MoonShine.onCallback('salary_updated', function(response, element, events, component) {
+            if(response.confirmed === true) {
+                component.$dispatch('toast', {type: 'success', text: 'Success'})
+            } else {
+                component.$dispatch('toast', {type: 'error', text: 'Error'})
+            }
+        })
+    })
+
+
 }

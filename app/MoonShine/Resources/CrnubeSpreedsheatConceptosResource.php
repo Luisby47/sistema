@@ -62,10 +62,12 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
        }
        */
 
+    /*
     public function import(): ?ImportHandler
     {
         return CustomImportHandler::make("Importar");
     }
+    */
     public function getActiveActions(): array
     {
         return ['create', 'view', 'update', 'delete', 'massDelete'];
@@ -79,12 +81,12 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
     }
 
 
-    /**
-     * @throws ValidationException
-     */
+
+
+
+        /*
     public function beforeImportFilling(array $data): array
     {
-
 
         try {
             // Definir las reglas de validación
@@ -120,14 +122,17 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 
             // Mostrar un toast con la cantidad de registros cargados
 
-            return $data;
-        } catch (ValidationException|Exception $e) {
-            // Enviar un toast con el mensaje de error
-            MoonShineUI::toast('Error al cargar los datos, corriga el excel' , 'error');
 
-            throw $e;
-        }
-    }
+           // return $data;
+        //}
+        //catch (ValidationException|Exception $e) {
+            // Enviar un toast con el mensaje de error
+         //   MoonShineUI::toast('Error al cargar los datos, corriga el excel' , 'error');
+
+        //    throw $e;
+       // }
+
+   // }
 
 
     /**
@@ -156,6 +161,9 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                     ->sortable()
                     ->searchable()
                     ->useOnImport(),
+
+
+
 
                     Select::make('Tipo de valor','value_type')
                         ->options([

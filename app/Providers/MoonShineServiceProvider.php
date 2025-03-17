@@ -7,7 +7,10 @@ namespace App\Providers;
 use App\Models\CrnubeSpreadsheetRole;
 use App\Models\CrnubeSpreedsheatConceptos;
 use App\MoonShine\Handlers\CustomImportHandler;
+use App\MoonShine\Pages\ColaboradorIngresosDeduciones;
+use App\MoonShine\Pages\GestionConceptosEmployee;
 use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
+use App\MoonShine\Resources\CrnubeSpreadsheetConceptosEmployeeResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetJornadaResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetTaxResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
@@ -40,6 +43,22 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     protected function resources(): array
     {
         return [
+            // Todos los Resources de la carpeta Moonshien/Resources
+            new CrnubeSpreedsheatConceptosResource,
+            new CrnubeSpreadsheetCCSSResource,
+            new CrnubeSpreadsheetJornadaResource,
+            new CrnubeSpreadsheetTaxResource,
+            new CrnubeSpreadsheetUserResource,
+            new HrDepartmentResource,
+            new HrEmployeeResource,
+            new HrJobResource,
+            new ResCompanyResource,
+            new CrnubeSpreadsheetConceptosEmployeeResource,
+
+
+
+
+
 
         ];
     }
@@ -49,7 +68,10 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
      */
     protected function pages(): array
     {
-        return [];
+        return [
+            new GestionConceptosEmployee
+
+        ];
     }
 
     /**
@@ -59,7 +81,9 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
     {
         return [
             MenuGroup::make('Gestionar Acciones de Personal', [
-
+                MenuItem::make('Gestionar Conceptos Salariales a un Colaborador',
+                    GestionConceptosEmployee::make('Gestionar Conceptos Salariales a un Colaborador', 'gestion_ingresos_deduciones')
+                ),
             ]),
             MenuGroup::make('Mantenimientos', [
                 MenuItem::make('Empleados',
@@ -86,6 +110,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Impuestos de Hacienda',
                     new CrnubeSpreadsheetTaxResource()
                 ),
+
             ],'heroicons.outline.user-group')->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1 && 2;}),
 
@@ -154,7 +179,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             ->background('#09304d')
             ->content('#061b2a')
             ->tableRow('#143e5c')
-            ->dividers('#FF0000')
+            ->dividers('#061b2a')
             ->borders('#061b2a')
 
             ->secondary('#D9D9D9', dark: true)

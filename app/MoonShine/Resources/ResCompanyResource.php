@@ -69,7 +69,7 @@ class ResCompanyResource extends ModelResource
                     ->sortable(),
                 //logo_web byte logo de la compañia
                 Email::make('Correo', 'email'),
-                Phone::make('Teléfono', 'phone'),
+                Phone::make('Teléfono', 'phone')->mask('9999-9999'),
                 Number::make('Numero de Cuenta', 'account_no'),
                 // Referencia al identificador del diario de cambio de moneda en la tabla
                 //account_journal.id

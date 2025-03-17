@@ -9,7 +9,9 @@ use Illuminate\Support\Facades\Cache;
 use MoonShine\ChangeLog\Traits\HasChangeLog;
 
 /**
+ * @property integer $id
  * @property string $name
+ * @property string value_type
  */
 class CrnubeSpreedsheatConceptos extends Model{
     use HasFactory;
@@ -23,12 +25,17 @@ class CrnubeSpreedsheatConceptos extends Model{
         'note' => '',
     ];
 
+    public static function paginate(int $perPage = 15, array $columns = ['*'], string $pageName = 'page', int $page = null): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return self::query()->paginate($perPage, $columns, $pageName, $page);
+    }
+
 
     public function employee() : BelongsTo
     {
         return $this->belongsTo(HrEmployee::class);
     }
-
+    protected bool $isAsync = true;
     protected static function boot(): void
     {
         parent::boot();
@@ -44,5 +51,11 @@ class CrnubeSpreedsheatConceptos extends Model{
     {
         return $this->belongsTo(ResCompany::class, 'company_id', 'id');
     }
+
+    public function conceptoEmployee(): BelongsTo
+    {
+        return $this->belongsTo(CrnubeSpreadsheetConceptosEmployee::class);
+    }
+
 
 }

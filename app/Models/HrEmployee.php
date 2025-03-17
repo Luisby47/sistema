@@ -10,6 +10,8 @@ use Illuminate\Notifications\Notifiable;
 use MoonShine\Traits\Models\HasMoonShineSocialite;
 /**
  * @property string $name_related
+ * @property string identification_id
+ * @property integer department_id
  */
 
 class HrEmployee extends Model
@@ -25,10 +27,14 @@ class HrEmployee extends Model
     protected $fillable = ['name_related'];
 
 
+    public function getDepartmentName()
+    {
+        return HrDepartment::query()->where('id', $this->department_id)->first()->name;
+    }
     // Un empleado pertenece a una compañia
     public function department() : BelongsTo
     {
-        return $this->belongsTo(HrDepartment::class  );
+        return $this->belongsTo(HrDepartment::class   );
     }
 
     // Un empleado pertenece a una puesto

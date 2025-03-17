@@ -23,3 +23,7 @@
     background-color: #4caf50; /* Adjust as needed */
     transition: width 1s linear;
 }
+
+.form-group {
+    width: auto !important;
+}

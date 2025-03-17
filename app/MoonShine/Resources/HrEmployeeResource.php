@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Email;
 use MoonShine\Fields\Number;
+use MoonShine\Fields\Phone;
 use MoonShine\Fields\Relationships\BelongsTo;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
@@ -90,14 +91,14 @@ class HrEmployeeResource extends ModelResource
                 Text::make('Estado civil', 'marital'),
 
                 //Relacion con la compañia
-                BelongsTo::make('Departamento', 'department',
+                    BelongsTo::make('Departamento', 'department',
                     static fn (HrDepartment $model) => $model->name, new HrDepartmentResource())->badge('green'),
                 //Relacion con el puesto
                 BelongsTo::make('Puesto de Trabajo', 'job',
                     static fn (HrJob $model) => $model->name, new HrJobResource())->badge('green'),
 
-                Number::make('Telefono de trabajo', 'work_phone'),
-                Number::make('Telefono movil', 'mobile_phone'),
+                Phone::make('Telefono de trabajo', 'work_phone')->mask('9999-9999'),
+                Phone::make('Telefono movil', 'mobile_phone')->mask('9999-9999'),
                 Date::make('Fecha de cumpleaños', 'birthday')
                     ->format('d/m/Y')
                     ->default(now()->toDateTimeString())

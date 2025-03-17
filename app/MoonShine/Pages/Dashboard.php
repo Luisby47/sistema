@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\MoonShine\Pages;
 
 
+use App\Models\ResCompany;
+use MoonShine\Components\FieldsGroup;
 use MoonShine\Components\MoonShineComponent;
 use MoonShine\Components\Title;
 use MoonShine\Decorations\Block;
@@ -35,9 +37,13 @@ class Dashboard extends Page
      */
     public function components(): array
 	{
+
+        $companyName = $companyName = ResCompany::query()->value('name');
 		return [
             Heading::make('¡Bienvenido al Sistema de Planillas de WG!')->h(1, false),
+            Heading::make( 'La empresa actual es  ' . $companyName)->h(2, false),
 
+            
         ];
 	}
 }
