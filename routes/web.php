@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\CrnubeAuthController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Calculos\ControllerCalculos;
 use App\Http\Controllers\Company\CompanyController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,8 @@ Route::get('/', function () {
 });
 
 Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('changeCompany');
+Route::get('/calculos', [ControllerCalculos::class, 'generarCalculos'])->name('generarCalculos');
+
 
 if (config('moonshine.auth.enable', true)) {
     Route::controller(ResetPasswordController::class)

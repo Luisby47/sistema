@@ -45,6 +45,7 @@ use MoonShine\Fields\Text;
 use MoonShine\Http\Responses\MoonShineJsonResponse;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
+use MoonShine\Notifications\MoonShineNotification;
 use MoonShine\Pages\Page;
 use MoonShine\Components\MoonShineComponent;
 
@@ -77,7 +78,10 @@ class GestionConceptosEmployee extends Page
         $employeeId = $request->input('id');
         $salaryValue = $request->input('salary_value');
 
-        Flash::make( 'Salario Actualizado', 'success');
+        MoonShineUI::toast('Empleado: ' . $employeeId . ' Salario: ' . $salaryValue, 'error');
+        error_log('Empleado: ' . $employeeId . ' Salario: ' . $salaryValue);
+
+
 
          // Basic validation
         if (empty($employeeId)) {
@@ -141,8 +145,9 @@ class GestionConceptosEmployee extends Page
              MoonShineUI::toast('Error al actualizar el salario: ' . $e->getMessage(), 'error');
         }
         MoonShineUI::toast('Salario Actualizado', 'success');
-        return MoonShineJsonResponse::make()->toast('Salario Actualizado', ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table')]);
+        return MoonShineJsonResponse::make()->toast('Salario Actualizado '. $salaryValue, ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table')]);
 
+        //return back();
     }
 
 
@@ -258,6 +263,8 @@ class GestionConceptosEmployee extends Page
                                                 CustomPreview::make('' , 'id')->reactive(),
                                             ])->justifyAlign('start')->itemsAlign('baseline'),
                                         Number::make('Salario Base', 'salary')->reactive(lazy: true),
+                                        ActionButton::make('ver')->method('ver')->withParams(['salary_value' => '#salary']),
+                                        ActionButton::make('ver caluculos', route('generarCalculos')),
                                         ActionButton::make('Actualizar Salario Base')
                                             ->primary()
                                             ->method('updateSalary')
