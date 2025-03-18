@@ -71,6 +71,21 @@ class GestionConceptosEmployee extends Page
     {
         return $this->title ?: 'GestionConceptosEmployee';
     }
+    public function deleteConcept(MoonShineRequest $request)
+    {
+
+
+        return MoonShineJsonResponse::make()
+            ->toast('Concepto Elimina ' , ToastType::SUCCESS)
+            ->events([
+                AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table'),
+                AlpineJs::event(JsEvent::TABLE_UPDATED, 'deducciones-table'),
+                AlpineJs::event(JsEvent::FORM_RESET, 'ingresos-form'),
+                AlpineJs::event(JsEvent::FORM_RESET, 'deducciones-form')
+            ]);
+        //return back();
+    }
+
 
     public function updateSalary(MoonShineRequest $request)
     {
@@ -145,18 +160,24 @@ class GestionConceptosEmployee extends Page
              MoonShineUI::toast('Error al actualizar el salario: ' . $e->getMessage(), 'error');
         }
         MoonShineUI::toast('Salario Actualizado', 'success');
-        return MoonShineJsonResponse::make()->toast('Salario Actualizado '. $salaryValue, ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table')]);
-
+        return MoonShineJsonResponse::make()
+            ->toast('Salario Actualizado ' . $salaryValue, ToastType::SUCCESS)
+            ->events([
+                AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table'),
+                AlpineJs::event(JsEvent::TABLE_UPDATED, 'deducciones-table'),
+                AlpineJs::event(JsEvent::FORM_RESET, 'ingresos-form'),
+                AlpineJs::event(JsEvent::FORM_RESET, 'deducciones-form')
+            ]);
         //return back();
     }
 
 
-    public function addConcepto(MoonShineRequest $request)
+    public function addConceptoIngreso(MoonShineRequest $request)
     {
 
         $employeeId = Cache::get('selected_employee');
-        $conceptId = $request->input('select_concepto_id');
-        $amount = $request->input('amount');
+        $conceptId = $request->input('select_ingreso_concepto_id');
+        $amount = $request->input('amountIngreso');
 
         // Basic validation
 
@@ -191,12 +212,55 @@ class GestionConceptosEmployee extends Page
             MoonShineUI::toast('Error al actualizar el concepto: ' . $e->getMessage(), 'error');
         }
 
-        //return MoonShineJsonResponse::make()->toast('Concepto agregado', ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table')]);
-        return back();
+        return MoonShineJsonResponse::make()->toast('Concepto agregado', ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table')]);
+        //return back();
 
     }
 
+    public function addConceptoDeduccion(MoonShineRequest $request)
+    {
 
+        $employeeId = Cache::get('selected_employee');
+        $conceptId = $request->input('select_deduccion_concepto_id');
+        $amount = $request->input('amountDeduccion');
+
+        // Basic validation
+
+        if (is_null($conceptId)) {
+            MoonShineUI::toast('Debe seleccionar un concepto.', 'error');
+            return back();
+        }
+
+        if (empty($employeeId)) {
+            MoonShineUI::toast('Debe seleccionar un empleado.', 'error');
+            return back();
+        }
+
+        if (!is_numeric($amount)) {
+            MoonShineUI::toast('El valor del salario no puede ser nulo.', 'error');
+            return back();
+        }
+
+        try {
+            CrnubeSpreadsheetConceptosEmployee::updateOrCreate(
+                [
+                    'employee_id' => $employeeId,
+                    'concepto_id' => $conceptId,
+                ],
+                [
+                    'company_id' => Cache::get('company'),
+                    'value' => $amount
+                ]
+            );
+
+        } catch (\Exception $e) {
+            MoonShineUI::toast('Error al actualizar el concepto: ' . $e->getMessage(), 'error');
+        }
+
+        return MoonShineJsonResponse::make()->toast('Concepto agregado', ToastType::SUCCESS)->events([AlpineJs::event(JsEvent::TABLE_UPDATED, 'deducciones-table')]);
+        //return back();
+
+    }
 
     /**
      * @return list<MoonShineComponent>
@@ -216,7 +280,9 @@ class GestionConceptosEmployee extends Page
                                 ->name('my-form')
                                 ->fields([
                                     Select::make('Buscar Colaborador', 'identification_id')
-                                        ->options(HrEmployee::query()->pluck('name_related', 'id')->toArray())
+                                        ->options(HrEmployee::query()->whereHas('department', function ($query) {
+                                            $query->where('company_id', Cache::get('company'));
+                                        })->pluck('name_related', 'id')->toArray())
                                         ->placeholder('Selecciona un colaborador')
                                         ->searchable()
                                         ->nullable()
@@ -265,7 +331,7 @@ class GestionConceptosEmployee extends Page
                                         Number::make('Salario Base', 'salary')->reactive(lazy: true),
                                         ActionButton::make('ver')->method('ver')->withParams(['salary_value' => '#salary']),
                                         ActionButton::make('ver caluculos', route('generarCalculos')),
-                                        ActionButton::make('Actualizar Salario Base')
+                                        ActionButton::make('Actualizar')
                                             ->primary()
                                             ->method('updateSalary')
                                             ->withParams([
@@ -291,9 +357,22 @@ class GestionConceptosEmployee extends Page
                                 FormBuilder::make()
                                     ->name('ingresos-form')
                                     ->fields(array(
-                                        Select::make('Buscar', 'select_concepto_id')
-                                            ->options(CrnubeSpreedsheatConceptos::query()->where(array('company_id' => Cache::get('company'), 'type' => 'ING'))
-                                            ->pluck('name', 'id')->toArray())
+                                        Select::make('Buscar', 'select_ingreso_concepto_id')
+                                            ->options(function () {
+                                                $employeeId = Cache::get('selected_employee');
+                                                $companyId = Cache::get('company');
+
+                                                // Obtener los IDs de los conceptos ya vinculados con el usuario
+                                                $linkedConceptIds = CrnubeSpreadsheetConceptosEmployee::where('employee_id', $employeeId)
+                                                    ->pluck('concepto_id')
+                                                    ->toArray();
+
+                                                // Filtrar los conceptos disponibles excluyendo los IDs obtenidos
+                                                return CrnubeSpreedsheatConceptos::where('company_id', $companyId)
+                                                    ->where('type', 'ING')
+                                                    ->whereNotIn('id', $linkedConceptIds)
+                                                    ->pluck('name', 'id')
+                                                    ->toArray();})
                                             ->nullable()
                                             ->placeholder('Seleccione un ingreso')
                                             ->searchable()
@@ -311,9 +390,9 @@ class GestionConceptosEmployee extends Page
                                             Heading::make('Tipo de Valor:'),
                                             CustomPreview::make('', 'value_type')->reactive(),
                                         ))->withoutSpace()->justifyAlign('start')->itemsAlign('baseline'),
-                                        Number::make('Cantidad', 'amount'),
+                                        Number::make('Cantidad', 'amountIngreso'),
 
-                                    ))->submit('Agregar')->asyncMethod('addConcepto')->async(asyncEvents: ['table-updated-ingresos-table']),
+                                    ))->submit('Agregar')->asyncMethod('addConceptoIngreso')->async( asyncEvents: ['table-updated-ingresos-table']),  //->async(asyncEvents: ['table-updated-ingresos-table']),
                                         Divider::make(),
                                         // Tabla de Ingresos
                                         TableBuilder::make()
@@ -333,7 +412,7 @@ class GestionConceptosEmployee extends Page
                                                     'cantidad' => $item->value
                                                 )))
                                                 ->sticky()->simple()->buttons(array(
-                                                ActionButton::make('Eliminar'),
+                                                ActionButton::make('Eliminar')->method('deleteConcept'),
 
 
                                             )),
@@ -343,17 +422,30 @@ class GestionConceptosEmployee extends Page
                             // Deducciones
                             Tab::make('Deducciones', [
                                 FormBuilder::make()
-                                    ->name('my-form2')
+                                    ->name('deducciones-form')
                                     ->fields([
-                                    Select::make('Buscar', 'identification_id')
-                                        ->options(CrnubeSpreedsheatConceptos::query()->where(['company_id' => Cache::get('company'), 'type' => 'DED' ])
-                                            ->pluck('name', 'id')->toArray())
+                                    Select::make('Buscar', 'select_deduccion_concepto_id')
+                                        ->options(function () {
+                                            $employeeId = Cache::get('selected_employee');
+                                            $companyId = Cache::get('company');
+
+                                            // Obtener los IDs de los conceptos ya vinculados con el usuario
+                                            $linkedConceptIds = CrnubeSpreadsheetConceptosEmployee::where('employee_id', $employeeId)
+                                                ->pluck('concepto_id')
+                                                ->toArray();
+
+                                            // Filtrar los conceptos disponibles excluyendo los IDs obtenidos
+                                            return CrnubeSpreedsheatConceptos::where('company_id', $companyId)
+                                                ->where('type', 'DED')
+                                                ->whereNotIn('id', $linkedConceptIds)
+                                                ->pluck('name', 'id')
+                                                ->toArray();})
                                         ->nullable()
                                         ->placeholder('Seleccione una deducción')
                                         ->searchable()
                                         ->reactive(function(Fields $fields, ?string $value): Fields {
 
-                                            $Field = $fields->findByColumn('valor_type');
+                                            $Field = $fields->findByColumn('valor_type_deduccion');
                                             if ($Field) {
                                                 $concept = CrnubeSpreedsheatConceptos::find($value);
                                                 $Field->setLabel($concept && $concept->value_type ? ($concept->value_type === 'MONT' ? 'Monto' : ($concept->value_type === 'PORC' ? 'Porcentaje' : 'No disponible')) : 'No disponible');                                            }
@@ -364,16 +456,16 @@ class GestionConceptosEmployee extends Page
 
                                 Flex::make([
                                     Heading::make('Tipo de Valor:'),
-                                    CustomPreview::make('', 'valor_type')->reactive(),
+                                    CustomPreview::make('', 'valor_type_deduccion')->reactive(),
                                 ])->withoutSpace()->justifyAlign('start')->itemsAlign('baseline'),
-                                Number::make('Cantidad', 'amount'),
-                                ])->submit('Agregar')->async(),
+                                Number::make('Cantidad', 'amountDeduccion'),
+                                ])->submit('Agregar')->asyncMethod('addConceptoDeduccion')->async( asyncEvents: ['table-updated-deducciones-table']),
                                 Divider::make(),
 
                                 // Tabla de Deducciones
                                 TableBuilder::make()
                                     ->async()
-                                    ->name('ingresos-table')
+                                    ->name('deducciones-table')
                                     ->fields(array(
                                         Text::make('Nombre' ),
                                         Number::make('Cantidad'),

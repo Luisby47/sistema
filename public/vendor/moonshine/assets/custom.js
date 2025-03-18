@@ -16,7 +16,8 @@ function modal_loading() {
             document.querySelectorAll('li a').forEach((link) => {
                 link.addEventListener('click', (e) => {
                     const href = link.getAttribute('href');
-                    if (href && !href.startsWith('#') && !link.hasAttribute('data-no-spinner')) {
+                    if (href && !href.startsWith('#') && !link.hasAttribute('data-no-spinner') &&
+                        !link.hasAttribute('data-async')) {
                         e.preventDefault();
                         this.open = true; // Mostrar modal
                         setTimeout(() => {
@@ -29,7 +30,9 @@ function modal_loading() {
             // Interceptar envíos de formularios para mostrar el modal
             document.querySelectorAll('form').forEach((form) => {
                 form.addEventListener('submit', (e) => {
-                    this.open = true; // Mostrar el modal cuando se envía el formulario
+                    if (!form.hasAttribute('data-async')) {
+                        this.open = true;
+                    } // Mostrar el modal cuando se envía el formulario
                 });
             });
         },
