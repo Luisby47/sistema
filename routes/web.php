@@ -20,6 +20,7 @@ Route::get('/', function () {
 
 Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('changeCompany');
 Route::get('/calculos', [ControllerCalculos::class, 'generarCalculos'])->name('generarCalculos');
+// route('concepto_id.deleteConcept'))
 
 
 if (config('moonshine.auth.enable', true)) {

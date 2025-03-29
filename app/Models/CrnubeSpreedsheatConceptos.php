@@ -12,6 +12,7 @@ use MoonShine\ChangeLog\Traits\HasChangeLog;
  * @property integer $id
  * @property string $name
  * @property string value_type
+ * @property integer value
  */
 class CrnubeSpreedsheatConceptos extends Model{
     use HasFactory;
@@ -57,5 +58,13 @@ class CrnubeSpreedsheatConceptos extends Model{
         return $this->belongsTo(CrnubeSpreadsheetConceptosEmployee::class);
     }
 
-
+    public function employees()
+    {
+        return $this->belongsToMany(
+            HrEmployee::class,
+            'crnube_spreedsheet_conceptos_employees',
+            'concept_id',
+            'employee_id'
+        )->withPivot('value');
+    }
 }

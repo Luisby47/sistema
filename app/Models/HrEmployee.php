@@ -43,8 +43,18 @@ class HrEmployee extends Model
         return $this->belongsTo(HrJob::class , 'job_id' ,'id'  );
     }
 
-    public function conceptos(): HasMany
+//    public function conceptos(): HasMany
+//    {
+//        return $this->hasMany(CrnubeSpreedsheatConceptos::class);
+//    }
+
+    public function conceptos()
     {
-        return $this->hasMany(CrnubeSpreedsheatConceptos::class);
+        return $this->belongsToMany(
+            CrnubeSpreedsheatConceptos::class, // Modelo de conceptos
+            'crnube_spreadsheet_conceptos_employees', // Nombre de la tabla pivot
+            'employee_id', // Foreign key de empleado
+            'concept_id' // Foreign key de concepto
+        )->withPivot('value'); // Columna adicional en el pivot
     }
 }

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('crnube_spreadsheet_conceptos_employees', function (Blueprint $table) {
 
-            $table->primary(['concepto_id','employee_id']);
+            $table->primary(['concept_id','employee_id']);
 
             // Add foreign key constraints if needed
             $table->foreignId('employee_id')
@@ -21,17 +21,12 @@ return new class extends Migration
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('concepto_id')
+            $table->foreignId('concept_id')
                 ->constrained('crnube_spreadsheet_conceptos')
                 ->cascadeOnDelete()
                 ->cascadeOnUpdate();
 
-            $table->foreignId('company_id')
-                ->constrained('res_company')
-                ->cascadeOnDelete()
-                ->cascadeOnUpdate();
-
-            $table->decimal('value',13,2);
+            $table->decimal('value', 13, 2);
 
         });
     }

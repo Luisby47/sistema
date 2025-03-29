@@ -24,14 +24,29 @@ class CrnubeSpreadsheetConceptosEmployee extends Model
     public $timestamps = false;
     public $incrementing = false;
 
+    /*
+    public static function updateOrCreate(array $attributes, array $values = [])
+    {
+        $instance = static::where($attributes)->first();
+
+        if ($instance) {
+            $instance->update($values);
+        } else {
+            $instance = static::create(array_merge($attributes, $values));
+        }
+
+        return $instance;
+    }
+    */
+
     public function conceptos() : HasMany
     {
-        return $this->hasMany(CrnubeSpreedsheatConceptos::class   );
+        return $this->hasMany(CrnubeSpreedsheatConceptos::class);
     }
 
     public function concepto() : BelongsTo
     {
-        return $this->belongsTo(CrnubeSpreedsheatConceptos::class, 'concepto_id');
+        return $this->belongsTo(CrnubeSpreedsheatConceptos::class, 'concept_id');
     }
 
 
