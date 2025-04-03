@@ -368,6 +368,7 @@ class GestionConceptosEmployee extends Page
                                         CustomPreview::make('', 'id')->reactive(),
                                     ])->justifyAlign('start')->itemsAlign('baseline'),
                                     Number::make('Salario Base', 'salary')->step(1)->min(0)->disabled()->reactive(),
+                                    ActionButton::make('Ver Comprobante Salarial', route('generarComprobanteSalarial')),
                                     ActionButton::make('Ver Cálculos', route('generarCalculos')),
                                     ActionButton::make('Actualizar')
                                         ->primary()

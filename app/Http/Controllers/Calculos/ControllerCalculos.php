@@ -14,10 +14,77 @@ use Illuminate\Support\Facades\DB;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
 use PHPUnit\Event\Telemetry\System;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ControllerCalculos extends Controller
 {
 
+    public function generarComprobanteSalarial(){
+        $id = Cache::get('selected_employee');
+        $employee = HrEmployee::find($id);
+
+        if(!$employee) {
+            return response()->json(['error' => 'Empleado no encontrado'], 404);
+        }
+
+        $xml = new \SimpleXMLElement('<comprobante/>');
+        $xml->addChild('id', $employee->id);
+        $xml->addChild('nombre', $employee->name_related);
+        $xml->addChild('cedula', $employee->identification_id);
+        $xml->addChild('puesto', $employee->job->name);
+
+        $name = 'employee_' . $employee->identification_id . '.xml';
+        $xmlPath = storage_path('app/' . $name);
+
+        $conceptos = $employee->conceptos()->get();
+        $totalIngresos = 0;
+        $totalDeducciones = 0;
+
+        $ingresosXml = $xml->addChild('ingresos');
+        $deduccionesXml = $xml->addChild('deducciones');
+
+        foreach ($conceptos as $concepto) {
+            $monto = $concepto->pivot->value * $concepto->value;
+
+            if ($concepto->type == 'ING') {
+                $conceptoXml = $ingresosXml->addChild('concepto');
+                $conceptoXml->addChild('nombre', htmlspecialchars($concepto->name, ENT_XML1, 'UTF-8'));
+                $conceptoXml->addChild('monto', number_format($monto, 2, '.', ''));
+                $totalIngresos += $monto;
+            } elseif ($concepto->type == 'DED') {
+                $conceptoXml = $deduccionesXml->addChild('concepto');
+                $conceptoXml->addChild('nombre', htmlspecialchars($concepto->name, ENT_XML1, 'UTF-8'));
+                $conceptoXml->addChild('monto', number_format($monto, 2, '.', ''));
+                $totalDeducciones += $monto;
+            }
+        }
+
+        $xml->addChild('total_ingresos', number_format($totalIngresos, 2, '.', ''));
+        $xml->addChild('total_deducciones', number_format($totalDeducciones, 2, '.', ''));
+
+        $xml->asXML($xmlPath);
+        $xmlString = file_get_contents($xmlPath);
+        $data = simplexml_load_string($xmlString, "SimpleXMLElement", LIBXML_NOCDATA);
+        $data = json_decode(json_encode($data), true);
+        $nombre = $data['nombre'];
+        $cedula = $data['cedula'];
+        $puesto = $data['puesto'];
+        $deducciones = isset($data['deducciones']['concepto'])
+            ? (isset($data['deducciones']['concepto'][0]) ? (array) $data['deducciones']['concepto'] : [(array) $data['deducciones']['concepto']])
+            : [];
+
+        $ingresos = isset($data['ingresos']['concepto'])
+            ? (isset($data['ingresos']['concepto'][0]) ? (array) $data['ingresos']['concepto'] : [(array) $data['ingresos']['concepto']])
+            : [];
+
+        $totalIngresos = $data['total_ingresos'];
+        $totalDeducciones = $data['total_deducciones'];
+
+        //dd($data);
+        $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto'));
+
+        return $pdf->download($employee->identification_id . 'comprobante_salarial.pdf');
+    }
 
     public function generarCalculos()
     {
@@ -143,4 +210,6 @@ class ControllerCalculos extends Controller
         echo "==============================================\n";
         echo "</pre>";
     }
+
+
 }
