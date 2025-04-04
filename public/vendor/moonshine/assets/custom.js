@@ -47,3 +47,26 @@ function modal_loading() {
     };
 }
 
+
+document.addEventListener('DOMContentLoaded', function() {
+    var btnGenerar = document.getElementById('btn-generar');
+    if (btnGenerar) {
+        btnGenerar.addEventListener('click', function(e) {
+            // Si es un botón de envío, evitar el comportamiento por defecto
+            e.preventDefault();
+            // Obtén el valor del select
+            var select = document.querySelector('select[name="value_type"]');
+            if (select && select.value) {
+                var valueType = select.value;
+                // Construye la URL (asegúrate de que la ruta esté definida en Laravel)
+                var url = "{{ url('/generate') }}/" + valueType;
+                window.location.href = url;
+            } else {
+                alert('Por favor, selecciona un tipo de plantilla');
+            }
+        });
+    }
+});
+
+
+

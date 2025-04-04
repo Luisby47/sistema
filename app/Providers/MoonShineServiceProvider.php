@@ -9,8 +9,10 @@ use App\Models\CrnubeSpreedsheatConceptos;
 use App\MoonShine\Handlers\CustomImportHandler;
 use App\MoonShine\Pages\ColaboradorIngresosDeduciones;
 use App\MoonShine\Pages\GestionConceptosEmployee;
+use App\MoonShine\Pages\GestionEnvioComprobantes;
 use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetConceptosEmployeeResource;
+use App\MoonShine\Resources\CrnubeSpreadsheetHeaderResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetJornadaResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetTaxResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetUserResource;
@@ -54,6 +56,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             new HrJobResource,
             new ResCompanyResource,
             new CrnubeSpreadsheetConceptosEmployeeResource,
+            new CrnubeSpreadsheetHeaderResource()
 
 
 
@@ -84,6 +87,9 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Gestionar Conceptos Salariales a un Colaborador',
                     GestionConceptosEmployee::make('Gestionar Conceptos Salariales a un Colaborador', 'gestion_ingresos_deduciones')
                 ),
+                MenuItem::make('Gestionar Ingresos y Deducciones',
+                    GestionEnvioComprobantes::make('Gestionar Comprobantes de Pago', 'gestion_comprobantes_pago')
+                ),
             ]),
             MenuGroup::make('Mantenimientos', [
                 MenuItem::make('Empleados',
@@ -111,11 +117,13 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                     new CrnubeSpreadsheetTaxResource()
                 ),
 
-            ],'heroicons.outline.user-group')->canSee(static function () {
+            ]   )->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1 && 2;}),
 
             MenuGroup::make('Procesar Planilla', [
-
+                MenuItem::make('Cerrar Planilla',
+                    new CrnubeSpreadsheetHeaderResource()
+                ),
             ]),
 
 
@@ -130,7 +138,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
 
                     // ... otros recursos
                 ),
-            ], 'heroicons.outline.user-group')->canSee(static function () {
+            ])->canSee(static function () {
                     return auth('moonshine')->user()->role_id === 1;}),
             /*
             MenuItem::make('Documentation', 'https://moonshine-laravel.com/docs')

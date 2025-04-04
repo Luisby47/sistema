@@ -429,7 +429,6 @@ class GestionConceptosEmployee extends Page
                                                 return $fields;
                                             }),
                                         // PRUEBA DE DECARGAR
-                                        ActionButton::make('Download')->method('download'),
 
 
 
@@ -468,7 +467,7 @@ class GestionConceptosEmployee extends Page
                                             'total' => $item->concepto->value * $item->value
                                         )))
                                     ->sticky()->simple()->buttons(array(
-                                        ActionButton::make('Eliminar')->method('deleteConcept', params: fn($item) => ['concepto_id' => $item['concepto_id'] ]),
+                                        ActionButton::make('Eliminar')->method('deleteConcept', params: fn($item) => ['concepto_id' => $item['concepto_id'] ])->icon('heroicons.outline.x-circle')->error(),
 
 
                                     )),
@@ -549,7 +548,7 @@ class GestionConceptosEmployee extends Page
                                             'total' => $item->concepto->value * $item->value
                                         )))
                                     ->sticky()->simple()->buttons(array(
-                                        ActionButton::make('Eliminar')->method('deleteConcept', params: fn($item) => ['concepto_id' => $item['concepto_id'] ]),
+                                        ActionButton::make('Eliminar')->method('deleteConcept', params: fn($item) => ['concepto_id' => $item['concepto_id'] ])->icon('heroicons.outline.x-circle')->error(),
 
 
                                     )),
