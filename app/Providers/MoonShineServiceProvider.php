@@ -87,7 +87,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                 MenuItem::make('Gestionar Conceptos Salariales a un Colaborador',
                     GestionConceptosEmployee::make('Gestionar Conceptos Salariales a un Colaborador', 'gestion_ingresos_deduciones')
                 ),
-                MenuItem::make('Gestionar Ingresos y Deducciones',
+                MenuItem::make('Gestionar comprobantes de pago',
                     GestionEnvioComprobantes::make('Gestionar Comprobantes de Pago', 'gestion_comprobantes_pago')
                 ),
             ]),

@@ -8,6 +8,7 @@ use App\Models\CrnubeSpreadsheetConceptosEmployee;
 use App\Models\CrnubeSpreadsheetTax;
 use App\Models\CrnubeSpreedsheatConceptos;
 use App\Models\HrEmployee;
+use App\Models\ResCompany;
 use http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -23,6 +24,9 @@ class ControllerCalculos extends Controller
         $id = Cache::get('selected_employee');
         $employee = HrEmployee::find($id);
 
+        $company_id = Cache::get('company');
+        $company = ResCompany::find($company_id);
+
         if(!$employee) {
             return response()->json(['error' => 'Empleado no encontrado'], 404);
         }
@@ -32,6 +36,8 @@ class ControllerCalculos extends Controller
         $xml->addChild('nombre', $employee->name_related);
         $xml->addChild('cedula', $employee->identification_id);
         $xml->addChild('puesto', $employee->job->name);
+        $xml->addChild('dpto', $employee->department->name);
+        $xml->addChild('empresa', $company->name);
 
         $name = 'employee_' . $employee->identification_id . '.xml';
         $xmlPath = storage_path('app/' . $name);
@@ -68,7 +74,9 @@ class ControllerCalculos extends Controller
         $data = json_decode(json_encode($data), true);
         $nombre = $data['nombre'];
         $cedula = $data['cedula'];
+        $empresa = $data['empresa'];
         $puesto = $data['puesto'];
+        $dpto = $data['dpto'];
         $deducciones = isset($data['deducciones']['concepto'])
             ? (isset($data['deducciones']['concepto'][0]) ? (array) $data['deducciones']['concepto'] : [(array) $data['deducciones']['concepto']])
             : [];
@@ -81,7 +89,7 @@ class ControllerCalculos extends Controller
         $totalDeducciones = $data['total_deducciones'];
 
         //dd($data);
-        $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto'));
+        $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto','dpto','empresa'))->setPaper('ledger', 'landscape');
 
         return $pdf->download($employee->identification_id . 'comprobante_salarial.pdf');
     }
