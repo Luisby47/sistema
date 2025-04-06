@@ -111,15 +111,15 @@ class GestionEnvioComprobantes extends Page
                             ])->justifyAlign('start')->itemsAlign('baseline'),
                             Divider::make(),
                             ActionButton::make('Ver Comprobante Salarial', route('generarComprobanteSalarial'))->icon('heroicons.outline.envelope')->info(),
-                                ActionButton::make('Enviar Comprobante')
-                                ->primary()
+                            ActionButton::make('Enviar Comprobante', route('sendEmail'))->icon('heroicons.outline.envelope')->info(),
+                        /* Esto era lo que antes tenia tenia el enviar comprobante:
+                         * ->primary()
                                 ->method('updateSalary')
                                 ->withParams([
                                     'id' => '[data-column="identification_id"]',
                                     'salary_value' => '[data-column="salary"]'
-                                ])->dispatchEvent(AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table'))->icon('heroicons.outline.envelope'),
-
-
+                                ])->dispatchEvent(AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table'))
+                         * */
 
                     ])->hideSubmit(),
             ])

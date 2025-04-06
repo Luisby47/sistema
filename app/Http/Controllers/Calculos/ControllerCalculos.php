@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Calculos;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ContactMailable;
 use App\Models\CrnubeSpreadsheetCCSS;
 use App\Models\CrnubeSpreadsheetConceptosEmployee;
 use App\Models\CrnubeSpreadsheetTax;
@@ -12,6 +13,7 @@ use App\Models\ResCompany;
 use http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
 use PHPUnit\Event\Telemetry\System;
@@ -91,7 +93,14 @@ class ControllerCalculos extends Controller
         //dd($data);
         $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto','dpto','empresa'))->setPaper('ledger', 'landscape');
 
-        return $pdf->download($employee->identification_id . 'comprobante_salarial.pdf');
+        // Guardar temporalmente el pdf
+        $fileName =$employee->identification_id . '_comprobante_salarial.pdf';
+        $pdfPath = storage_path('app/' . $fileName);
+        $pdf->save($pdfPath);
+
+        Cache::put('temp_pdf_path', $pdfPath);
+
+        return $pdf->download($fileName);
     }
 
     public function generarCalculos()
@@ -219,5 +228,35 @@ class ControllerCalculos extends Controller
         echo "</pre>";
     }
 
+
+    public function sendEmail()
+    {
+        try {
+            $pdfPath = Cache::get('temp_pdf_path');
+
+            if (!$pdfPath || !file_exists($pdfPath)) {
+                throw new \Exception("El comprobante no está disponible. Por favor, genera el PDF primero.");
+            }
+
+            $employeeIdinCache = Cache::get('selected_employee');
+            $employeeCedula = HrEmployee::find($employeeIdinCache)
+                ->identification_id;
+
+            $pdfEmployeeId = basename($pdfPath, '_comprobante_salarial.pdf'); // solo deja el id
+
+            if($employeeCedula != $pdfEmployeeId) {
+                throw new \Exception("El comprobante no corresponde al empleado seleccionado.");
+            }
+
+            Mail::to('admin@example.com')->send(new ContactMailable($pdfPath));
+            echo 'Email sent successfully!';
+            unlink($pdfPath);
+            Cache::forget('temp_pdf_path');
+
+        } catch (\Exception $e) {
+            echo 'Error sending email: ' . $e->getMessage();
+            return;
+        }
+    }
 
 }

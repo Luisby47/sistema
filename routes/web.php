@@ -22,6 +22,7 @@ Route::get('/', function () {
 Route::post('/change-company', [CompanyController::class, 'changeCompany'])->name('changeCompany');
 Route::get('/calculos', [ControllerCalculos::class, 'generarCalculos'])->name('generarCalculos');
 Route::get('/comprobante-salarial', [ControllerCalculos::class, 'generarComprobanteSalarial'])->name('generarComprobanteSalarial');
+Route::get('/enviar-comprobante-email',[ControllerCalculos::class, 'sendEmail'])->name('sendEmail');
 // route('concepto_id.deleteConcept'))
 //Route::post('/generate', [\App\Http\Controllers\ControllerConceptosEmployee::class, 'generate'])->name('generate');
 Route::POST('/generate', [ControllerConceptosEmployee::class, 'generate'])
