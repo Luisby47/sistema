@@ -14,6 +14,8 @@ use http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use MoonShine\Enums\ToastType;
+use MoonShine\Http\Responses\MoonShineJsonResponse;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
 use PHPUnit\Event\Telemetry\System;
@@ -249,13 +251,15 @@ class ControllerCalculos extends Controller
             }
 
             Mail::to('admin@example.com')->send(new ContactMailable($pdfPath));
-            echo 'Email sent successfully!';
             unlink($pdfPath);
             Cache::forget('temp_pdf_path');
 
+            $employeeName = HrEmployee::find($employeeIdinCache)->name_related;
+            MoonShineUI::toast("Se ha enviado el correo existosamente al colaborador $employeeName", 'success');
+            return back();
         } catch (\Exception $e) {
-            echo 'Error sending email: ' . $e->getMessage();
-            return;
+            MoonShineUI::toast('Error al enviar el comprobante: ' . $e->getMessage(), 'error');
+            return back();
         }
     }
 
