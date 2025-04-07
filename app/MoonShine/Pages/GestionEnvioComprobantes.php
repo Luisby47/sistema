@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\MoonShine\Pages;
 
 use App\Models\CrnubeSpreadsheetConceptosEmployee;
+use App\Models\CrnubeSpreadsheetHeader;
 use App\Models\CrnubeSpreedsheatConceptos;
 use App\Models\HrEmployee;
 use App\MoonShine\Field\CustomPreview;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use MoonShine\ActionButtons\ActionButton;
 use MoonShine\Components\FormBuilder;
@@ -17,9 +20,12 @@ use MoonShine\Decorations\Divider;
 use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Heading;
 use MoonShine\Enums\JsEvent;
+use MoonShine\Fields\Field;
 use MoonShine\Fields\Fields;
 use MoonShine\Fields\Number;
 use MoonShine\Fields\Select;
+use MoonShine\Fields\Template;
+use MoonShine\Http\Responses\MoonShineJsonResponse;
 use MoonShine\Pages\Page;
 use MoonShine\Components\MoonShineComponent;
 use MoonShine\Support\AlpineJs;
@@ -44,7 +50,11 @@ class GestionEnvioComprobantes extends Page
     public function beforeRender(): void
     {
         Cache::put('selected_employee', null);
+        Cache::put('spreadsheet_type', null);
     }
+
+
+
 
 
     /**
@@ -52,23 +62,38 @@ class GestionEnvioComprobantes extends Page
      * @throws \Throwable
      */
     public function components(): array
-	{
-		return [
+    {
+        return [
             Block::make('Información del Colaborador', [
 
-                FormBuilder::make()
+                FormBuilder::make(action:  route('sendEmail') )
                     ->name('my-form')
+                    ->async()
                     ->fields([
                         //Selecciona el tipo de planilla
                         Select::make('Tipo de Planilla', 'spreadsheet_id')
                             ->options([
-                                'SEMA' => 'Planilla Semanal',
-                                'QUIN' => 'Planilla Quincenal',
-                                'MENS' => 'Planilla Mensual',
+                                'SEMANAL' => 'Planilla Semanal',
+                                'QUINCENAL' => 'Planilla Quincenal',
+                                'MENSUAL' => 'Planilla Mensual',
                             ])
                             ->placeholder('Selecciona un tipo de planilla')
                             ->searchable()
-                            ->nullable(),
+                            ->nullable()
+                            ->required()
+
+                            // Esta es la forma correcta de hacer el reactive segun la documentacion de moonshine
+                            ->reactive(function(Fields $fields, ?string $value, Field $field, array $values): Fields {
+                                //$field->setValue($value);
+                                return tap($fields, callback: static fn($fields) => $fields
+                                    ->findByColumn('spreadsheet_number')
+                                    ?->options(
+                                        CrnubeSpreadsheetHeader::query()
+                                            ->where('company_id', Cache::get('company'))
+                                            ->where('type', $value)
+                                            ->pluck('number', 'id')->toArray()
+                                    ));
+                            }),
 
                         Select::make('Buscar Colaborador', 'identification_id')
                             ->options(HrEmployee::query()->whereHas('department', function ($query) {
@@ -77,52 +102,62 @@ class GestionEnvioComprobantes extends Page
                             ->placeholder('Selecciona un colaborador')
                             ->searchable()
                             ->nullable()
-                            ->badge('red')
-                            ->reactive(function (Fields $fields, ?string $value): Fields {
+                            ->required()
+                            ->reactive(function(Fields $fields, ?string $value, Field $field, array $values): Fields {
 
                                 if ($value) {
                                     Cache::put('selected_employee', $value); // Store in cache
                                 }
-                                $nameField = $fields->findByColumn('name');
-                                $idField = $fields->findByColumn('id');
-                                $salaryField = $fields->findByColumn('salary');
 
-                                if ($nameField || $idField || $salaryField) {
-                                    // Get the employee
-                                    $employee = HrEmployee::find($value);
+                                $employee = HrEmployee::find($value);
+//
+                                return tap($fields, function($fields) use ($employee) { // 👈 Quita "static"
 
-                                    $nameField->setLabel($employee && $employee->name_related ? $employee->name_related : 'No disponible');
-                                    $idField->setLabel($employee && $employee->identification_id ? $employee->identification_id : 'No disponible');
+                                    $nameField = $fields->findByColumn('name');
+                                    $idField = $fields->findByColumn('id');
 
-                                }
-                                return $fields;
+                                    if ($nameField) {
+                                        $nameField->setValue($employee?->name_related ?? 'No disponible');
+                                    }
+
+                                    if ($idField) {
+                                        $idField->setValue($employee?->identification_id ?? 'No disponible');
+                                    }
+                                });
                             }),
+
+                        // Un select para seleccionar la el numeoro de planilla del tipo de planilla selecionado
+                        Select::make('Nomida', 'spreadsheet_number')
+                            ->placeholder('Selecciona el numero de planilla')
+                            ->searchable()
+                            ->reactive()
+                            ->required()
+                            ->nullable(),
+
                         Divider::make(),
 
-                            Heading::make('Información del Colaborador'),
-                            Flex::make([
-                                Heading::make('Nombre:'),
-                                CustomPreview::make('', 'name')->reactive(),
-                            ])->justifyAlign('start')->itemsAlign('baseline'),
+                        Heading::make('Información del Colaborador'),
+                        Flex::make([
+                            Heading::make('Nombre:'),
+                            CustomPreview::make('', 'name')->reactive(),
+                        ])->justifyAlign('start')->itemsAlign('baseline'),
 
-                            Flex::make([
-                                Heading::make('Identificacion:'),
-                                CustomPreview::make('', 'id')->reactive(),
-                            ])->justifyAlign('start')->itemsAlign('baseline'),
-                            Divider::make(),
-                            ActionButton::make('Ver Comprobante Salarial', route('generarComprobanteSalarial'))->icon('heroicons.outline.envelope')->info(),
-                            ActionButton::make('Enviar Comprobante', route('sendEmail'))->icon('heroicons.outline.envelope')->info(),
-                        /* Esto era lo que antes tenia tenia el enviar comprobante:
-                         * ->primary()
-                                ->method('updateSalary')
-                                ->withParams([
-                                    'id' => '[data-column="identification_id"]',
-                                    'salary_value' => '[data-column="salary"]'
-                                ])->dispatchEvent(AlpineJs::event(JsEvent::TABLE_UPDATED, 'ingresos-table'))
-                         * */
+                        Flex::make([
+                            Heading::make('Identificacion:'),
+                            CustomPreview::make('', 'id')->reactive(),
+                        ])->justifyAlign('start')->itemsAlign('baseline'),
+                        Divider::make(),
 
-                    ])->hideSubmit(),
+
+
+
+
+                    ])->buttons(
+                        [ ActionButton::make('Ver Comprobante Salarial', route('generarComprobanteSalarial'))->icon('heroicons.outline.envelope')->info(),
+                            ActionButton::make('Enviar Comprobante', route('sendEmail'))->icon('heroicons.outline.envelope')->primary(),
+                            ]
+                    )->hideSubmit(),
             ])
         ];
-	}
+    }
 }

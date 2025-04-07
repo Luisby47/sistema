@@ -28,6 +28,9 @@ Route::get('/enviar-comprobante-email',[ControllerCalculos::class, 'sendEmail'])
 Route::POST('/generate', [ControllerConceptosEmployee::class, 'generate'])
     ->name('generate'); // 👈 Ruta POST
 
+Route::get('/selectOptions', [ControllerConceptosEmployee::class, 'selectOptions'])
+    ->name('selectOptions'); // 👈 Ruta GET
+
 if (config('moonshine.auth.enable', true)) {
     Route::controller(ResetPasswordController::class)
         ->group(static function (): void {

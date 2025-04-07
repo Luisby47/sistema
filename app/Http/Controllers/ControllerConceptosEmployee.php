@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CrnubeSpreadsheetHeader;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use MoonShine\Http\Responses\MoonShineJsonResponse;
 use MoonShine\MoonShineRequest;
 use MoonShine\MoonShineUI;
 
 class ControllerConceptosEmployee extends Controller
 {
+
+    public function selectOptions(): MoonShineJsonResponse
+    {
+        $spreadsheet_type = Cache::get('spreadsheet_type');
+        $options = CrnubeSpreadsheetHeader::query()->where(
+            'company_id', Cache::get('company')
+        )->where('type', $spreadsheet_type)->get();
+
+        return MoonShineJsonResponse::make(data: $options->toArray());
+    }
     public function generate(MoonShineRequest $request): RedirectResponse
     {
         // Validar el tipo de plantilla
