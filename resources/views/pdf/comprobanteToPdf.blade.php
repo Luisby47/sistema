@@ -87,6 +87,7 @@
         <p><strong>Puesto:</strong> {{ $puesto }}</p>
     </div>
 
+<<<<<<< Updated upstream
     <h3>Ingresos</h3>
     <table>
         <thead>
@@ -106,6 +107,78 @@
     </table>
     <p class="total"><strong>Total Ingresos:</strong> {{ number_format($totalIngresos, 2, ',', '.') }}</p>
 
+=======
+<<<<<<< HEAD
+    <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+            <td style="width: 50%; vertical-align: top;">
+                <div style="padding-right: 10px;">
+                    <h3>Ingresos</h3>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($ingresos as $ingreso)
+                            <tr>
+                                <td>{{ $ingreso['nombre'] }}</td>
+                                <td>{{ number_format($ingreso['monto'], 2, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <p class="total"><strong>Total Ingresos:</strong> {{ number_format($totalIngresos, 2, ',', '.') }}</p>
+                </div>
+            </td>
+            <td style="width: 50%; vertical-align: top;">
+                <div style="padding-left: 10px;">
+                    <h3>Deducciones</h3>
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Concepto</th>
+                            <th>Monto</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach ($deducciones as $deduccion)
+                            <tr>
+                                <td>{{ $deduccion['nombre'] }}</td>
+                                <td>{{ number_format($deduccion['monto'], 2, ',', '.') }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                    <p class="total"><strong>Total Deducciones:</strong> {{ number_format($totalDeducciones, 2, ',', '.') }}</p>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+=======
+    <h3>Ingresos</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Concepto</th>
+            <th>Monto</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach ($ingresos as $ingreso)
+            <tr>
+                <td>{{ $ingreso['nombre'] }}</td>
+                <td>{{ number_format($ingreso['monto'], 2, ',', '.') }}</td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+    <p class="total"><strong>Total Ingresos:</strong> {{ number_format($totalIngresos, 2, ',', '.') }}</p>
+
+>>>>>>> Stashed changes
     <h3>Deducciones</h3>
     <table>
         <thead>
@@ -128,6 +201,7 @@
     <div class="salary-box">
         <p>Salario Depositado: _</p>
     </div>
+>>>>>>> bdb3e4fdcbae611d55cc049b477f33afa8492516
 </div>
 </body>
 </html>

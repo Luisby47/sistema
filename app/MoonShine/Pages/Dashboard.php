@@ -42,8 +42,6 @@ class Dashboard extends Page
 		return [
             Heading::make('¡Bienvenido al Sistema de Planillas de WG!')->h(1, false),
             Heading::make( 'La empresa actual es  ' . $companyName)->h(2, false),
-
-            
         ];
 	}
 }
