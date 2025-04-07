@@ -9,27 +9,36 @@
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
-            padding: 0;
+            padding: 0px 0; /* solo espacio arriba y abajo si querés */
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
+            align-items: flex-start; /* IMPORTANTE: esto lo pega arriba */
+            min-height: 100vh;
+            box-sizing: border-box;
         }
         .container {
-            width: 800px;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 0;
+            padding-top: 0px; /* si querés un poquito de espacio dentro */
         }
+
         .header {
             background-color: #09304c;
-            color: white;
             padding: 15px;
-            text-align: left;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* ✅ centra verticalmente */
+            gap: 20px;
+        }
+
+        .info-text {
+            flex: 1; /* ✅ permite que el texto tome espacio sin empujar al logo */
+        }
+
         .header h1 {
             margin: 0;
             font-size: 20px;
@@ -43,23 +52,7 @@
             margin: 5px 0;
             font-size: 14px;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            text-align: right;
-        }
-        th {
-            background-color: #e9ecef;
-            text-align: left;
-        }
-        .total {
-            font-weight: bold;
-        }
+
         .salary-box {
             background-color: #0b2942;
             color: white;
@@ -69,16 +62,71 @@
             font-size: 18px;
             font-weight: bold;
         }
+
+        .logo-circular {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: white;
+            padding: 10px;
+            object-fit: cover;
+        }
+
+        .tables-row {
+            display: flex; /* Usamos flexbox para alinear las tablas en una línea */
+            justify-content: space-between; /* Alinea las tablas a la derecha */
+            gap: 20px; /* Espacio entre las tablas */
+            width: 100%;
+            flex-wrap: nowrap;
+        }
+
+        .table-container {
+            flex: 1;
+            width: 45%;
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e9ecef;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <img src="{{ public_path('images/login-logo.png') }}" alt="Logo" width="600">
-        <br> <br> <br>
-        <h1>{{ $empresa }}</h1>
-        <p>{{ $dpto }}</p>
-        <p>Comprobante de Pago de Salario</p>
+        <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+                <td style="color: white; vertical-align: top; text-align: left;">
+                    <h1 style="margin: 0;">{{ $empresa }}</h1>
+                    <p style="margin: 0;">{{ $dpto }}</p>
+                    <p style="margin: 0;">Comprobante de Pago de Salario</p>
+                </td>
+                <td style="text-align: right;">
+                    <img src="{{ public_path('images/logo_anfiteatro.png') }}" alt="Logo" class="logo-circular">
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div class="info">
@@ -87,46 +135,48 @@
         <p><strong>Puesto:</strong> {{ $puesto }}</p>
     </div>
 
-    <h3>Ingresos</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Concepto</th>
-            <th>Monto</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($ingresos as $ingreso)
-            <tr>
-                <td>{{ $ingreso['nombre'] }}</td>
-                <td>{{ number_format($ingreso['monto'], 2, ',', '.') }}</td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <p class="total"><strong>Total Ingresos:</strong> {{ number_format($totalIngresos, 2, ',', '.') }}</p>
+    <div class="tables-row">
+        <div class="table-container">
+            <h3>Ingresos</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($ingresos as $ingreso)
+                    <tr>
+                        <td>{{ $ingreso['nombre'] }}</td>
+                        <td>{{ number_format($ingreso['monto'], 2, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            <p class="total"><strong>Total Ingresos:</strong> {{ number_format($totalIngresos, 2, ',', '.') }}</p>
+        </div>
 
-    <h3>Deducciones</h3>
-    <table>
-        <thead>
-        <tr>
-            <th>Concepto</th>
-            <th>Monto</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach ($deducciones as $deduccion)
-            <tr>
-                <td>{{ $deduccion['nombre'] }}</td>
-                <td>{{ number_format($deduccion['monto'], 2, ',', '.') }}</td>
-            </tr>
-        @endforeach
-        </tbody>
-    </table>
-    <p class="total"><strong>Total Deducciones:</strong> {{ number_format($totalDeducciones, 2, ',', '.') }}</p>
-
-    <div class="salary-box">
-        <p>Salario Depositado: _</p>
+        <div class="table-container">
+            <h3>Deducciones</h3>
+            <table>
+                <thead>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Monto</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach ($deducciones as $deduccion)
+                    <tr>
+                        <td>{{ $deduccion['nombre'] }}</td>
+                        <td>{{ number_format($deduccion['monto'], 2, ',', '.') }}</td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+            <p class="total"><strong>Total Deducciones:</strong> {{ number_format($totalDeducciones, 2, ',', '.') }}</p>
+        </div>
     </div>
 </div>
 </body>
