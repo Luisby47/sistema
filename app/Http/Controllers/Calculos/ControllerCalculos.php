@@ -250,7 +250,8 @@ class ControllerCalculos extends Controller
                 throw new \Exception("El comprobante no corresponde al empleado seleccionado.");
             }
 
-            Mail::to('admin@example.com')->send(new ContactMailable($pdfPath));
+            $email = '#'; // colocar el correo al que se enviará el comprobante, en un futuro debería tomarse el del empleado
+            Mail::to($email)->send(new ContactMailable($pdfPath));
             unlink($pdfPath);
             Cache::forget('temp_pdf_path');
 
