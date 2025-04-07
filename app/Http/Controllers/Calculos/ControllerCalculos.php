@@ -32,7 +32,8 @@ class ControllerCalculos extends Controller
         $company = ResCompany::find($company_id);
 
         if(!$employee) {
-            return response()->json(['error' => 'Empleado no encontrado'], 404);
+            MoonShineUI::toast("No se ha seleccionado ningún empleado colaborador", 'error');
+            return back();
         }
 
         $xml = new \SimpleXMLElement('<comprobante/>');
