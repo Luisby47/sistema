@@ -52,7 +52,7 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
 
     protected bool $errorsAbove = false;
 
-    protected array $with = ['company'];
+    protected array $with = ['company', 'account'];
 
 
     /*
@@ -202,6 +202,13 @@ class CrnubeSpreedsheatConceptosResource extends ModelResource
                     ->showOnExport()
                     ->useOnImport(),
                 */
+
+                BelongsTo::make('Cuenta Contable', 'account',  fn($item) => "$item->name", resource: new CrnubeSpreadsheetAccountsResource())
+                    ->nullable()
+                    ->searchable()
+                    ->required(),
+
+
 
 
                 BelongsTo::make('Empresa', 'company', static fn(ResCompany $model) => $model->name, new ResCompanyResource())

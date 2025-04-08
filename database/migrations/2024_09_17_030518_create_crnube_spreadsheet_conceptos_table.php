@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('value_type',4);
             $table->decimal('value',13,2);
             $table->text('note');
+            $table->foreignId('account_id')
+                ->constrained('account_account')
+                ->cascadeOnDelete()
+                ->cascadeOnUpdate();
             $table->foreignId('company_id')
                 ->constrained('res_company')
                 ->cascadeOnDelete()

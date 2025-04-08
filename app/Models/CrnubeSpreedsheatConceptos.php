@@ -53,6 +53,11 @@ class CrnubeSpreedsheatConceptos extends Model{
         return $this->belongsTo(ResCompany::class, 'company_id', 'id');
     }
 
+    public function account() : BelongsTo
+    {
+        return $this->belongsTo(CrnubeSpreadsheetAccount::class, 'account_id', 'id');
+    }
+
     public function conceptoEmployee(): BelongsTo
     {
         return $this->belongsTo(CrnubeSpreadsheetConceptosEmployee::class);

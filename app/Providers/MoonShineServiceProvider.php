@@ -10,6 +10,7 @@ use App\MoonShine\Handlers\CustomImportHandler;
 use App\MoonShine\Pages\ColaboradorIngresosDeduciones;
 use App\MoonShine\Pages\GestionConceptosEmployee;
 use App\MoonShine\Pages\GestionEnvioComprobantes;
+use App\MoonShine\Resources\CrnubeSpreadsheetAccountsResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetCCSSResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetConceptosEmployeeResource;
 use App\MoonShine\Resources\CrnubeSpreadsheetHeaderResource;
@@ -56,7 +57,8 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
             new HrJobResource,
             new ResCompanyResource,
             new CrnubeSpreadsheetConceptosEmployeeResource,
-            new CrnubeSpreadsheetHeaderResource()
+            new CrnubeSpreadsheetHeaderResource(),
+            new CrnubeSpreadsheetAccountsResource()
 
 
 
