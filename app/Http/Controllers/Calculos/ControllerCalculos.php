@@ -31,10 +31,17 @@ class ControllerCalculos extends Controller
         $company_id = Cache::get('company');
         $company = ResCompany::find($company_id);
 
+
         if(!$employee) {
             MoonShineUI::toast("No se ha seleccionado ningún empleado colaborador", 'error');
             return back();
         }
+
+        $conceptoSalarioBase = DB::table('crnube_spreadsheet_conceptos')->where('name', 'Salario Base')->first();
+        $conceptoSalarioBaseId = $conceptoSalarioBase->id;
+        $salarioBase = $employee->conceptos()->where('id', $conceptoSalarioBaseId)->first()->pivot->value * $conceptoSalarioBase->value;
+        $ccss_empleado = DB::table('crnube_spreadsheet_c_c_s_s')->where('name', 'Pago CCSS Empleado')->first();
+
 
         $xml = new \SimpleXMLElement('<comprobante/>');
         $xml->addChild('id', $employee->id);
@@ -54,6 +61,12 @@ class ControllerCalculos extends Controller
         $ingresosXml = $xml->addChild('ingresos');
         $deduccionesXml = $xml->addChild('deducciones');
 
+        $deduccionCCSS = $deduccionesXml->addChild('concepto');
+        $monto = $salarioBase * $ccss_empleado->value / 100;
+        $deduccionCCSS->addChild('nombre', htmlspecialchars($ccss_empleado->name, ENT_XML1, 'UTF-8'));
+        $deduccionCCSS->addChild('monto', number_format($monto, 2, '.', ''));
+        $totalDeducciones += $monto;
+
         foreach ($conceptos as $concepto) {
             $monto = $concepto->pivot->value * $concepto->value;
 
@@ -70,8 +83,11 @@ class ControllerCalculos extends Controller
             }
         }
 
+        $salarioNeto = $totalIngresos - $totalDeducciones;
+
         $xml->addChild('total_ingresos', number_format($totalIngresos, 2, '.', ''));
         $xml->addChild('total_deducciones', number_format($totalDeducciones, 2, '.', ''));
+        $xml->addChild('salario_neto', number_format($salarioNeto, 2, '.', ''));
 
         $xml->asXML($xmlPath);
         $xmlString = file_get_contents($xmlPath);
@@ -92,9 +108,11 @@ class ControllerCalculos extends Controller
 
         $totalIngresos = $data['total_ingresos'];
         $totalDeducciones = $data['total_deducciones'];
+        $salarioNeto = $data['salario_neto'];
 
         //dd($data);
-        $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto','dpto','empresa'))->setPaper('ledger', 'landscape');
+        $pdf = Pdf::loadView('pdf.comprobanteToPdf', compact('id', 'nombre', 'cedula', 'ingresos', 'deducciones', 'totalIngresos', 'totalDeducciones', 'puesto','dpto','empresa', 'salarioNeto'))
+            ->setPaper('ledger', 'landscape');
 
         // Guardar temporalmente el pdf
         $fileName =$employee->identification_id . '_comprobante_salarial.pdf';

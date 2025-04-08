@@ -153,7 +153,7 @@ class GestionEnvioComprobantes extends Page
 
 
                     ])->buttons(
-                        [ ActionButton::make('Ver Comprobante Salarial', route('generarComprobanteSalarial'))->icon('heroicons.outline.envelope')->info(),
+                        [ ActionButton::make('Generar Comprobante Salarial', route('generarComprobanteSalarial'))->icon('heroicons.outline.envelope')->info(),
                             ActionButton::make('Enviar Comprobante', route('sendEmail'))->icon('heroicons.outline.envelope')->primary(),
                             ]
                     )->hideSubmit(),
