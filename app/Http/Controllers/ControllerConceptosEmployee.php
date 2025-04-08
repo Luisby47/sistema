@@ -50,9 +50,15 @@ class ControllerConceptosEmployee extends Controller
         $now = Carbon::now();
         [$dateStart, $dateEnd] = $this->calculateDateRange($validated['value_type'], $now);
 
-        // Generar número consecutivo
-        $nextNumber = $this->generateNextNumber($companyId, $type, $now->year);
+        // Obtener el último número para este tipo, compañía y año
+        $lastNumber = DB::table('crnube_spreadsheet_headers')
+            ->where('company_id', $companyId)
+            ->where('type', $type)
+            ->whereYear('created_at', $now->year)
+            ->max('number');
 
+        // Generar el próximo número secuencial
+        $nextNumber = $this->generateNextNumber($lastNumber, $type);
         // Variable para notas
         $notes = $validated['notes'] ?? null;
 
